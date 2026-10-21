@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inference Korea 일정표</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Inference Engineering 스터디 10회차 일정표. 회차별 읽을 범위, 발제자, 참고 논문과 영상.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/board.css">
+<style>
+/* 알 지도: 10개의 정거장을 잇는 길 */
+.map{overflow-x:auto;padding:6px 2px 14px;margin-top:14px;-webkit-overflow-scrolling:touch}
+.track{position:relative;display:grid;grid-template-columns:repeat(10,minmax(84px,1fr));min-width:860px;padding-top:78px}
+.track::before{content:"";position:absolute;left:5%;right:5%;top:122px;border-top:5px dashed var(--line);opacity:.5}
+.stop{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--hero-ink);text-align:center}
+.stop svg{width:52px;height:62px;position:relative;z-index:1}
+.stop b{font-family:var(--display);font-weight:400;font-size:17px;line-height:1.2}
+.stop small{font-family:var(--px);font-size:11.5px;opacity:.85}
+.stop .mini{font-size:12.5px;line-height:1.35;max-width:96px;word-break:keep-all;opacity:.9}
+.stop.next svg{animation:wob 1.2s ease-in-out infinite}
+@keyframes wob{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.walker{position:absolute;top:0;width:54px;transform:translateX(-50%);transition:left .6s;z-index:2}
+.walker img{width:100%;display:block;animation:hop .9s ease-in-out infinite}
+@keyframes hop{50%{transform:translateY(-5px)}}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--px);font-size:12.5px;margin-top:4px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:17px;border-radius:50%;border:2px solid var(--line);display:inline-block}
+
+/* 상태 요약 */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.stat{padding:12px 16px}
+.stat b{display:block;font-family:var(--display);font-weight:400;font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{font-size:13.5px;color:var(--muted)}
+.stat.warn{background:var(--yolk);color:var(--yolk-ink)}
+.stat.warn span{color:var(--yolk-ink)}
+
+/* 도구줄 */
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.seg{display:inline-flex;border:3px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+.seg button{font:inherit;font-family:var(--display);font-size:15px;color:var(--ink);background:transparent;border:0;padding:4px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--band);color:#FFF4CF}
+.tools .gap{flex:1}
+
+/* 회차 카드 */
+.list{display:grid;gap:20px}
+.sess{display:grid;grid-template-columns:150px minmax(0,1fr) minmax(0,300px);overflow:hidden;scroll-margin-top:130px}
+.sess .when{padding:16px;border-right:3px solid var(--line);display:flex;flex-direction:column;gap:4px;background:var(--bg2)}
+.sess .no{font-family:var(--display);font-size:44px;line-height:1;color:var(--ink)}
+.sess .no small{font-size:16px;color:var(--muted)}
+.sess .date{font-family:var(--px);font-size:13.5px}
+.dd{align-self:flex-start;font-family:var(--px);font-size:12.5px;border-radius:999px;padding:1px 10px;border:2px solid var(--line);background:var(--panel)}
+.sess .mid{padding:16px 20px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.sess h3{margin:0;font-size:24px}
+.sess .en{margin:-8px 0 0;color:var(--muted);font-size:14px}
+.sess .goal{margin:0;font-size:15.5px}
+.sess details{font-size:14.5px}
+.sess summary{cursor:pointer;font-family:var(--px);font-size:13px;color:var(--teal-ink)}
+.sess ul{margin:6px 0 0;padding-left:20px}
+.sess .side{padding:16px 18px;border-left:3px dashed var(--dash);display:flex;flex-direction:column;gap:10px;min-width:0}
+.who{display:grid;gap:6px}
+.who .p{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;gap:8px;border:2.5px solid var(--line);border-radius:12px;padding:5px 10px;background:var(--panel)}
+.who .p .k{font-family:var(--px);font-size:11.5px;color:var(--muted)}
+.who .p b{font-family:var(--display);font-weight:400;font-size:17px}
+.who .p.open{border-style:dashed;background:var(--yolk);color:var(--yolk-ink)}
+.who .p.open .k{color:var(--yolk-ink)}
+.who .p.open b{font-size:15px}
+.ref{font-size:14px;line-height:1.5;min-width:0;overflow-wrap:anywhere}
+.ref .lab{font-family:var(--px);font-size:11.5px;color:var(--muted);display:block}
+.sess .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.sess .acts .btn{font-size:14px;padding:3px 12px}
+.sess.done,.sess.skip{opacity:.72}
+.sess.past .when{background:var(--bg2)}
+.sess.next,.sess.live{border-color:var(--pink);box-shadow:6px 6px 0 var(--pink)}
+.sess.next .when,.sess.live .when{background:var(--yolk);color:var(--yolk-ink)}
+.sess.next .when .no,.sess.live .when .no{color:var(--yolk-ink)}
+.sess.next .when .no small,.sess.live .when .no small{color:var(--yolk-ink)}
+.stamp{font-family:var(--px);font-size:12px;border:2.5px solid var(--pink);color:var(--pink-ink);border-radius:6px;padding:0 8px;transform:rotate(-4deg);align-self:flex-start;background:var(--panel)}
+.sess.done .stamp{border-color:var(--ok);color:var(--ok)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.c0,.c1{background:#D6F0EC;color:#155F55}.c2{background:#FBD9DF;color:#8E2238}.c3{background:#FCE2CF;color:#7A3A0E}.c4{background:#E7DCFA;color:#3F1C7A}.c5{background:#FFF0B3;color:#6A4A00}.c6{background:#D6F0EC;color:#155F55}.c7{background:#FBD9DF;color:#8E2238}
+
+/* 표 보기 */
+.tablewrap{overflow-x:auto;border:3px solid var(--line);border-radius:var(--r);background:var(--panel);box-shadow:5px 5px 0 var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:820px;font-size:14.5px}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1.5px solid var(--dash)}
+th{font-family:var(--px);font-size:12.5px;font-weight:400;color:var(--muted);background:var(--bg2);position:sticky;top:0}
+td.n{font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+td .open{background:var(--yolk);color:var(--yolk-ink);border-radius:6px;padding:0 6px;font-family:var(--px);font-size:12px}
+tr.done td{opacity:.6}
+tr.next td{background:var(--bg2)}
+
+.sp-strip{display:flex;gap:12px;align-items:center;border:3px dashed var(--line);border-radius:14px;padding:8px 14px;margin:-6px 0 18px;background:var(--bg2)}
+.sp-strip img{width:40px;image-rendering:pixelated;flex:none}
+.sp-strip p{margin:0;font-size:14.5px;min-width:0}
+.sp-strip b{font-family:var(--display);font-weight:400;font-size:16px;margin-right:6px;color:var(--pink-ink)}
+.empty{padding:20px;text-align:center;color:var(--muted)}
+@media (max-width:980px){.sess{grid-template-columns:120px minmax(0,1fr)}.sess .side{grid-column:1 / -1;border-left:0;border-top:3px dashed var(--dash)}}
+@media (max-width:640px){
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sess{grid-template-columns:minmax(0,1fr)}
+  .sess .when{border-right:0;border-bottom:3px solid var(--line);flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px}
+  .sess .no{font-size:34px}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="ticker" role="status"><span class="lamp" aria-hidden="true"></span><div class="run"><span id="tickerText">Inference Korea · 매주 토요일 저녁 8시 · Zoom</span></div></div>
+  <div class="navbar"><div class="wrap">
+    <a class="brand" href="index.html"><img src="assets/img/chick-core.webp" alt=""><span>Inference Korea <small>병아리 추론 연구소</small></span></a>
+    <nav class="nav" aria-label="스터디 보드">
+      <a href="index.html"><span class="n">01</span>브리핑</a>
+      <a href="schedule.html"><span class="n">02</span>일정표</a>
+      <a href="topic.html"><span class="n">03</span>주제 안내</a>
+      <a href="guide.html"><span class="n">04</span>스터디 안내</a>
+    </nav>
+  </div></div>
+</div>
+
+<header class="hero page-hero">
+  <div class="stripes" aria-hidden="true"></div>
+  <div class="wrap">
+    <span class="kicker">SCHEDULE · 초파리 연구원이 정리함</span>
+    <h1>알 열 개 지도</h1>
+    <p class="lede">토요일마다 알 하나. 모임을 마치면 알이 부화하고, 병아리는 다음 알로 걸어갑니다. 알을 누르면 그 회차로 내려갑니다.</p>
+    <div class="map" tabindex="0" aria-label="10회차 지도 (가로로 밀어 볼 수 있음)">
+      <div class="track" id="track"></div>
+    </div>
+    <div class="legend"><span><i style="background:var(--cream)"></i>부화 완료</span><span><i style="background:#F2BD16"></i>다음 모임</span><span><i style="background:var(--panel)"></i>예정</span><span><i style="background:transparent;border-style:dashed"></i>휴강</span></div>
+  </div>
+</header>
+
+<main>
+<section aria-labelledby="list-h" style="padding-top:30px"><div class="wrap">
+  <div class="stats" id="stats"></div>
+  <div class="sec-h"><h2 id="list-h">회차별 일정</h2><span class="tag">매주 토 20:00 KST</span></div>
+  <p class="sub">노란 칸은 아직 발제자가 없는 자리입니다. 맡고 싶다면 <a href="guide.html#join">신청 방법</a>을 보세요. 모든 모임은 <a href="index.html#zoom">Zoom</a>으로 열리고, 발표 자료는 <a href="https://drive.google.com/drive/folders/1NxhUYActOe-POABwqiYdxXBaBg5tY44c" target="_blank" rel="noopener">발표자료 폴더</a>에 모입니다.</p>
+  <div class="sp-strip"><img src="assets/img/fly.webp" alt=""><p><b>특별 세션 · 연사 특강</b> 정규 회차 외에 초청 연사 특강이 열립니다. 일정은 Discord로 안내합니다.</p></div>
+  <div class="tools">
+    <div class="seg" role="group" aria-label="회차 거르기">
+      <button type="button" id="f-all" data-f="all" aria-pressed="true">전체</button>
+      <button type="button" id="f-up" data-f="up" aria-pressed="false">앞으로</button>
+      <button type="button" id="f-open" data-f="open" aria-pressed="false">발제자 모집 중</button>
+      <button type="button" id="f-done" data-f="done" aria-pressed="false">지난 회차</button>
+    </div>
+    <span class="gap"></span>
+    <div class="seg" role="group" aria-label="보기 방식">
+      <button type="button" id="v-card" data-v="card" aria-pressed="true">카드</button>
+      <button type="button" id="v-table" data-v="table" aria-pressed="false">표</button>
+    </div>
+  </div>
+  <div id="list" class="list"></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p>발제자와 날짜는 <a href="https://docs.google.com/spreadsheets/d/1pVf5_bPLA5_UhImUO7EJ_Puh3Q5b485w65WVo1QlFsI/edit?usp=sharing" target="_blank" rel="noopener">스터디 시간표(구글 시트)</a>에서 자동으로 읽어 옵니다 · 교재: <a href="https://www.baseten.co/inference-engineering/" target="_blank" rel="noopener">Kiely, P. (2026). Inference engineering. Baseten Books.</a></p>
+  <p>캘린더 일정은 시작 시각부터 2시간으로 잡힙니다(실제 종료 시각과 다를 수 있음).</p>
+  <p><span class="sync" data-sync></span></p>
+  <p class="credit" data-credit>페이지 제작 Reon Ahn (Ahn, Sang-Sun) · 연락 sangsun.ahn@m-robo.com · 홈페이지 <a href="https://www.ahnboat.xyz" target="_blank" rel="noopener">www.ahnboat.xyz</a></p>
+</div></footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/board.js"></script>
+<script>
+(function(){
+  var B=window.Board,S=B.S,esc=B.esc;
+  /* 이 쪽에서 쓰는 문구 */
+  var L10N={
+    book:'책 발제',paper:'논문 발제',open:'모집 중 · 손 들어 주세요',openShort:'모집 중',
+    nth:'회차',sess:function(n){return n+'회';},
+    ch:function(n,name){return n+'장 '+name;},
+    stDone:'부화 완료',stLive:'진행 중',stNext:'다음 모임',stSkip:'휴강',
+    goal:'이번 주 목표',reads:function(n,r){return '읽을 꼭지 '+n+'개 · '+r;},
+    ref:'참고 논문',video:'추가 영상',slides:'발표 자료',slidesOpen:'자료 열기 ↗',folder:'발표자료 폴더',
+    cal:'캘린더 추가',zoom:'Zoom 참가',bookCh:function(n){return '교재 '+n+'장 열기';},
+    statDone:'부화한 알(지난 회차)',statTo:function(n){return n+'회차까지';},statEnd:'모든 회차 완료',end:'끝!',
+    statSlots:function(b,p){return '발제 자리 확정 (책 '+b+' · 논문 '+p+')';},statOpen:'남은 회차의 빈 발제 자리',
+    th:['회차','날짜','주제','읽을 범위','책 발제','논문 발제','참고 논문','자료'],
+    empty:'이 조건에 맞는 회차가 없습니다.',emptyOpen:' 남은 발제 자리가 모두 찼어요!'
+  };
+  var filt='all',view='card';
+  try{view=localStorage.getItem('chick-sched-view')||'card';}catch(e){}
+
+  function egg(st){
+    var fill=st==='done'?'var(--cream)':(st==='next'||st==='live')?'#F2BD16':'var(--panel)';
+    if(st==='skip') return '<svg viewBox="0 0 44 54" aria-hidden="true"><ellipse cx="22" cy="29" rx="18" ry="23" fill="none" stroke="var(--dash)" stroke-width="2.5" stroke-dasharray="5 4"/></svg>';
+    if(st==='done') return '<svg viewBox="0 0 44 54" aria-hidden="true"><circle cx="22" cy="20" r="9" fill="#F2BD16" stroke="var(--line)" stroke-width="2.5"/><circle cx="25" cy="18" r="1.6" fill="var(--line)"/><path d="M29 20 l5 1 -5 2z" fill="#F2A97A" stroke="var(--line)" stroke-width="1.2"/><path d="M4 30 Q4 50 22 51 Q40 50 40 30 L32 25 L27 31 L22 24 L17 31 L12 25 Z" fill="'+fill+'" stroke="var(--line)" stroke-width="2.5"/></svg>';
+    return '<svg viewBox="0 0 44 54" aria-hidden="true"><ellipse cx="22" cy="29" rx="18" ry="23" fill="'+fill+'" stroke="var(--line)" stroke-width="2.5"/><circle cx="15" cy="20" r="3" fill="var(--teal)" opacity=".7"/><circle cx="28" cy="34" r="2.4" fill="var(--pink)" opacity=".6"/></svg>';
+  }
+  function chips(s){return s.chapters.map(function(n){return '<span class="chip c'+n+'">'+L10N.ch(n,esc(B.chapter(n).en))+'</span>';}).join('');}
+  function person(kind,name){
+    var k=kind==='book'?L10N.book:L10N.paper;
+    return name?'<div class="p"><span class="k">'+k+'</span><b>'+esc(B.name(name))+'</b></div>':'<div class="p open"><span class="k">'+k+'</span><b>'+L10N.open+'</b></div>';
+  }
+  function match(s){
+    var st=B.status(s);
+    if(filt==='up') return !B.closed(s);
+    if(filt==='done') return B.closed(s);
+    if(filt==='open') return !B.closed(s)&&(!s.book||!s.paper);
+    return true;
+  }
+  function drawMap(){
+    var tr=document.getElementById('track'),nx=B.next();
+    tr.innerHTML=S.sessions.map(function(s){var st=B.status(s);
+      return '<a class="stop '+st+'" href="#s'+s.no+'">'+egg(st)+'<b>'+L10N.sess(s.no)+'</b><small>'+esc(B.fmtDate(s))+'</small><span class="mini">'+esc(B.tx(s,'title'))+'</span></a>';}).join('')+
+      '<div class="walker" id="walker" aria-hidden="true"><img src="'+B.asset('assets/img/chick-deco.webp')+'" alt=""></div>';
+    var idx=nx?S.sessions.indexOf(nx):S.sessions.length-1;
+    document.getElementById('walker').style.left=((idx+.5)/S.sessions.length*100)+'%';
+  }
+  function drawStats(){
+    var done=B.doneCount();
+    var f=B.filled(),open=B.openSlots().length,nx=B.next();
+    document.getElementById('stats').innerHTML=
+      '<div class="card stat"><b>'+done+' / 10</b><span>'+L10N.statDone+'</span></div>'+
+      '<div class="card stat"><b>'+(nx?B.ddayText(nx):L10N.end)+'</b><span>'+(nx?L10N.statTo(nx.no):L10N.statEnd)+'</span></div>'+
+      '<div class="card stat"><b>'+(f.book+f.paper)+' / 20</b><span>'+L10N.statSlots(f.book,f.paper)+'</span></div>'+
+      '<div class="card stat'+(open?' warn':'')+'"><b>'+open+'</b><span>'+L10N.statOpen+'</span></div>';
+  }
+  function drawCards(arr){
+    return arr.map(function(s){
+      var st=B.status(s),ch=B.chapter(s.chapters[s.chapters.length-1]);
+      var stamp={done:L10N.stDone,live:L10N.stLive,next:L10N.stNext,skip:L10N.stSkip}[st];
+      var slides=B.safeUrl(s.slides);
+      return '<article class="card sess '+st+'" id="s'+s.no+'">'+
+        '<div class="when"><span class="no">'+s.no+'<small>'+L10N.nth+'</small></span><span class="date">'+esc(B.fmtDate(s))+' '+B.timeOf(s)+'</span><span class="dd">'+B.ddayText(s)+'</span>'+(stamp?'<span class="stamp">'+stamp+'</span>':'')+'</div>'+
+        '<div class="mid"><div class="chips">'+chips(s)+(s.note?'<span class="chip" style="background:var(--pink);color:#fff">'+esc(s.note)+'</span>':'')+'</div>'+
+          '<h3>'+esc(B.tx(s,'title'))+'</h3><p class="en">'+esc(B.sub(s))+'</p>'+
+          '<p class="goal"><b class="px" style="font-size:12.5px">'+L10N.goal+'</b> '+esc(B.tx(s,'goal'))+'</p>'+
+          '<details><summary>'+esc(L10N.reads(s.reads.length,B.tx(s,'range')))+'</summary><ul>'+s.reads.map(function(r){return '<li>'+esc(r)+'</li>';}).join('')+'</ul></details>'+
+        '</div>'+
+        '<div class="side"><div class="who">'+person('book',s.book)+person('paper',s.paper)+'</div>'+
+          '<div class="ref"><span class="lab">'+L10N.ref+' · '+s.paperInfo.year+'</span><a href="'+esc(s.paperInfo.url)+'" target="_blank" rel="noopener"><b>'+esc(s.paperInfo.short)+'</b> — '+esc(s.paperInfo.title)+'</a></div>'+
+          (s.video?'<div class="ref"><span class="lab">'+L10N.video+'</span><a href="'+esc(s.video.url)+'" target="_blank" rel="noopener">'+esc(s.video.title)+'</a></div>':'')+
+          '<div class="ref"><span class="lab">'+L10N.slides+'</span><a href="'+esc(slides||S.slidesFolder)+'" target="_blank" rel="noopener">'+(slides?L10N.slidesOpen:L10N.folder+' ↗')+'</a></div>'+
+          '<div class="acts">'+(!B.closed(s)?'<a class="btn" href="'+esc(S.zoom.url)+'" target="_blank" rel="noopener">'+L10N.zoom+'</a><a class="btn ghost" href="'+esc(B.calUrl(s))+'" target="_blank" rel="noopener">'+L10N.cal+'</a>':'')+'<a class="btn ghost" href="'+esc(ch.url)+'" target="_blank" rel="noopener">'+L10N.bookCh(ch.no)+'</a></div>'+
+        '</div></article>';
+    }).join('');
+  }
+  function drawTable(arr){
+    function cell(n){return n?esc(B.name(n)):'<span class="open">'+L10N.openShort+'</span>';}
+    return '<div class="tablewrap"><table><thead><tr>'+L10N.th.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr></thead><tbody>'+
+      arr.map(function(s){var st=B.status(s),sl=B.safeUrl(s.slides);return '<tr class="'+st+'" id="s'+s.no+'"><td class="n">'+s.no+'</td><td style="white-space:nowrap">'+esc(B.fmtDate(s))+'<br><small class="px">'+B.ddayText(s)+'</small></td><td><b>'+esc(B.tx(s,'title'))+'</b><br><small style="color:var(--muted)">'+esc(B.sub(s))+'</small></td><td>'+esc(B.tx(s,'range'))+'</td><td>'+cell(s.book)+'</td><td>'+cell(s.paper)+'</td><td><a href="'+esc(s.paperInfo.url)+'" target="_blank" rel="noopener">'+esc(s.paperInfo.short)+'</a></td><td><a href="'+esc(sl||S.slidesFolder)+'" target="_blank" rel="noopener">'+(sl?'✓':'↗')+'</a></td></tr>';}).join('')+
+      '</tbody></table></div>';
+  }
+  function drawList(){
+    var arr=S.sessions.filter(match),el=document.getElementById('list');
+    if(!arr.length){el.innerHTML='<div class="card empty">'+L10N.empty+(filt==='open'?L10N.emptyOpen:'')+'</div>';return;}
+    el.innerHTML=view==='table'?drawTable(arr):drawCards(arr);
+  }
+  function paintBtns(){
+    document.querySelectorAll('[data-f]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.f===filt);});
+    document.querySelectorAll('[data-v]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===view);});
+  }
+  document.querySelectorAll('[data-f]').forEach(function(b){b.addEventListener('click',function(){filt=b.dataset.f;paintBtns();drawList();});});
+  document.querySelectorAll('[data-v]').forEach(function(b){b.addEventListener('click',function(){view=b.dataset.v;try{localStorage.setItem('chick-sched-view',view);}catch(e){}paintBtns();drawList();});});
+  var first=true;
+  B.onUpdate(function(){
+    drawMap();drawStats();paintBtns();drawList();
+    if(first&&location.hash){first=false;var t=document.getElementById(location.hash.slice(1));if(t)setTimeout(function(){t.scrollIntoView();},50);}
+  });
+})();
+</script>
+</body>
+</html>

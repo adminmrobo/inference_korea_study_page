@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>추론 엔지니어링 주제 안내</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="추론 엔지니어링이란 무엇인지, 책 여덟 장의 지도, 토큰 생성 실험, 핵심 용어와 참고 논문 열 편.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/board.css">
+<style>
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:20px;align-items:end}
+.hero-grid img{width:100%;max-width:220px;justify-self:center;filter:drop-shadow(4px 5px 0 rgba(42,18,87,.25))}
+
+/* 학습 vs 추론 */
+.vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:stretch}
+.vs .card{padding:18px 20px}
+.vs .card h3{margin:0 0 4px;font-size:23px}
+.vs .card .px{font-size:12px;color:var(--muted)}
+.vs .card ul{margin:8px 0 0;padding-left:20px}
+.vs .mid{display:grid;place-items:center;font-family:var(--display);font-size:28px;color:var(--pink-ink)}
+.vs .infer{background:var(--yolk);color:var(--yolk-ink)}
+.vs .infer .px{color:var(--yolk-ink)}
+.tri{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+.tri div{border:3px dashed var(--line);border-radius:14px;padding:12px 16px}
+.tri b{font-family:var(--display);font-weight:400;font-size:20px;display:block}
+.tri span{font-size:14.5px;color:var(--muted)}
+
+/* 실험실 */
+.lab{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:0;overflow:hidden}
+.lab .ctl{padding:18px 20px;border-right:3px solid var(--line);background:var(--bg2);display:grid;gap:14px;align-content:start}
+.lab label{display:grid;gap:2px;font-size:14.5px}
+.lab label .v{font-family:var(--px);font-size:13px;color:var(--teal-ink)}
+.lab label small{color:var(--muted);font-size:12.5px;line-height:1.45}
+.lab input[type=range]{width:100%;accent-color:var(--pink)}
+.lab .out{padding:18px 20px;display:grid;gap:14px;min-width:0}
+.pipe{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 12px;align-items:center}
+.pipe img{width:46px}
+.bar{height:16px;border:2.5px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+.bar i{display:block;height:100%;width:0;background:var(--teal)}
+.bar.dec i{background:var(--pink)}
+.pipe .lb{grid-column:2;font-family:var(--px);font-size:12px;color:var(--muted);margin-top:-6px}
+.speech{min-height:84px;border:3px solid var(--line);border-radius:16px 16px 16px 4px;padding:10px 14px;background:var(--panel);font-size:15px;line-height:1.6}
+.speech .tk{background:var(--chip);color:var(--chip-ink);border-radius:5px;padding:0 2px;margin-right:2px}
+.speech .tk.new{background:var(--yolk);color:var(--yolk-ink)}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.metric{border:2.5px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--panel)}
+.metric b{display:block;font-family:var(--display);font-weight:400;font-size:24px;line-height:1.15;font-variant-numeric:tabular-nums}
+.metric span{font-size:12.5px;color:var(--muted);line-height:1.35;display:block}
+.chartbox{border:2.5px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--panel)}
+.chartbox h4{margin:0;font-size:16px}
+.chartbox p{margin:0;font-size:13px;color:var(--muted)}
+.chartbox svg{width:100%;height:auto;display:block}
+.chartbox text{font-family:var(--px);font-size:11px;fill:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin:0}
+
+/* 책 지도 */
+.chmap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.chc{padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.chc .no{font-family:var(--display);font-size:38px;line-height:1;color:var(--pink-ink)}
+.chc h3{margin:0;font-size:20px}
+.chc h3 small{display:block;font-family:var(--body);font-size:13.5px;color:var(--muted)}
+.chc p{margin:0;font-size:14px}
+.chc ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--muted)}
+.chc .foot{margin-top:auto;display:flex;gap:6px;flex-wrap:wrap;padding-top:6px}
+.chc .foot a{font-family:var(--px);font-size:12px;text-decoration:none;background:var(--chip);color:var(--chip-ink);border-radius:999px;padding:1px 9px}
+
+/* 용어 */
+.gloss-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.gloss-tools input{font:inherit;font-size:16px;color:var(--ink);background:var(--panel);border:3px solid var(--line);border-radius:999px;padding:6px 16px;min-width:0;flex:1;max-width:420px}
+.gloss{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:980px){.gloss{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.gloss{grid-template-columns:minmax(0,1fr)}}
+.term{padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.term h3{margin:0;font-size:19px}
+.term h3 small{font-family:var(--px);font-size:11.5px;color:var(--muted);margin-left:6px}
+.term p{margin:0;font-size:14.5px}
+.term .chick{font-size:13.5px;color:var(--muted);border-top:2px dashed var(--dash);padding-top:6px}
+.term .chick b{font-family:var(--px);font-size:11.5px;color:#B07A00}
+:root[data-theme="dark"] .term .chick b{color:var(--yolk)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .term .chick b{color:var(--yolk)}}
+.term .foot a{font-family:var(--px);font-size:11.5px}
+
+/* 논문 */
+.shelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.paper{padding:14px 18px;display:grid;grid-template-columns:54px minmax(0,1fr);gap:12px;align-items:start}
+.paper .yr{font-family:var(--px);font-size:12px;text-align:center;background:var(--band);color:#FFF4CF;border-radius:8px;padding:6px 0;line-height:1.3}
+.paper .yr b{display:block;font-family:var(--display);font-weight:400;font-size:20px;color:var(--yolk)}
+.paper h3{margin:0;font-size:18px}
+.paper .t{margin:0;font-size:13.5px;color:var(--muted);overflow-wrap:anywhere}
+.paper .why{margin:6px 0 0;font-size:14.5px}
+.vids{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.vids li{border:2.5px solid var(--line);border-radius:12px;padding:8px 14px;background:var(--panel)}
+.vids small{font-family:var(--px);color:var(--muted);font-size:11.5px;display:block}
+
+@media (max-width:980px){.chmap{grid-template-columns:repeat(2,minmax(0,1fr))}.lab{grid-template-columns:minmax(0,1fr)}.lab .ctl{border-right:0;border-bottom:3px solid var(--line)}}
+@media (max-width:700px){
+  .hero-grid{grid-template-columns:minmax(0,1fr)}.hero-grid img{max-width:150px}
+  .vs{grid-template-columns:minmax(0,1fr)}.vs .mid{font-size:22px}
+  .tri{grid-template-columns:minmax(0,1fr)}
+  .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chmap,.shelf{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="ticker" role="status"><span class="lamp" aria-hidden="true"></span><div class="run"><span id="tickerText">Inference Korea · 매주 토요일 저녁 8시 · Zoom</span></div></div>
+  <div class="navbar"><div class="wrap">
+    <a class="brand" href="index.html"><img src="assets/img/chick-core.webp" alt=""><span>Inference Korea <small>병아리 추론 연구소</small></span></a>
+    <nav class="nav" aria-label="스터디 보드">
+      <a href="index.html"><span class="n">01</span>브리핑</a>
+      <a href="schedule.html"><span class="n">02</span>일정표</a>
+      <a href="topic.html"><span class="n">03</span>주제 안내</a>
+      <a href="guide.html"><span class="n">04</span>스터디 안내</a>
+    </nav>
+  </div></div>
+</div>
+
+<header class="hero page-hero">
+  <div class="stripes" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="kicker">TOPIC · 삐약코어가 안내함</span>
+      <h1>추론 엔지니어링이 뭐예요?</h1>
+      <p class="lede">모델을 <b>만드는</b> 일이 학습이라면, 만든 모델로 사람들의 요청에 <b>빠르고 싸고 정확하게</b> 답하게 하는 일이 추론 엔지니어링입니다. GPU 고르기, 추론 엔진 설정, 양자화와 캐시, 배포와 자동 확장까지가 모두 여기에 들어갑니다.</p>
+    </div>
+    <img src="assets/img/chick-core.webp" alt="가슴에 회로 하트가 있는 큰 병아리 삐약코어">
+  </div>
+</header>
+
+<main>
+<section aria-labelledby="vs-h"><div class="wrap">
+  <div class="sec-h"><h2 id="vs-h">학습과 추론</h2><span class="tag">0장 · 1회차</span></div>
+  <p class="sub">같은 모델이라도 하는 일이 다릅니다. 학습은 가끔, 크게 한 번. 추론은 서비스가 살아 있는 동안 요청마다 계속 일어납니다.</p>
+  <div class="vs">
+    <div class="card"><span class="px">TRAINING</span><h3>학습: 병아리 학교</h3><ul><li>데이터를 보며 가중치(모델의 지식)를 만든다</li><li>몇 주짜리 큰 작업을 몇 번 한다</li><li>얼마나 잘 배웠나(품질)가 중심</li></ul></div>
+    <div class="mid" aria-hidden="true">→</div>
+    <div class="card infer"><span class="px">INFERENCE</span><h3>추론: 실전에서 짹짹</h3><ul><li>정해진 가중치로 입력마다 답을 만든다</li><li>요청이 올 때마다, 동시에 여러 사람에게</li><li>얼마나 빨리, 얼마나 싸게, 얼마나 정확하게</li></ul></div>
+  </div>
+  <div class="tri">
+    <div><b>속도</b><span>첫 글자가 언제 나오나(TTFT), 그 뒤로 얼마나 빨리 이어지나(초당 토큰)</span></div>
+    <div><b>비용</b><span>GPU 한 장으로 손님을 몇 명 받나(처리량), 놀고 있는 GPU는 없나</span></div>
+    <div><b>품질</b><span>빨라지려고 줄인 정밀도와 지름길이 답을 망치지 않았나</span></div>
+  </div>
+  <p class="note" style="margin-top:12px">책 1장의 출발점이 이것입니다. 세 가지를 모두 최대로 만들 수는 없으니, 내 서비스에 맞는 균형을 먼저 정해야 합니다.</p>
+</div></section>
+
+<section aria-labelledby="lab-h"><div class="wrap">
+  <div class="sec-h"><h2 id="lab-h">삐약코어 실험실</h2><span class="tag">PREFILL · DECODE · BATCH</span></div>
+  <p class="sub">손님의 질문을 프리가 한입에 삼키고(프리필), 디코가 한 알씩 대답합니다(디코드). 손님을 많이 받을수록 GPU 전체로는 이득이지만 손님 한 명은 기다리는 시간이 늘어납니다. 막대를 움직이고 "짹짹 시작"을 눌러 보세요.</p>
+  <div class="card lab">
+    <div class="ctl">
+      <label for="inTok">질문 길이 (입력 토큰) <span class="v" id="inTokV"></span><input id="inTok" type="range" min="100" max="8000" step="100" value="1000"><small>길수록 프리가 삼키는 데 오래 걸립니다 → 첫 글자가 늦어짐</small></label>
+      <label for="outTok">대답 길이 (출력 토큰) <span class="v" id="outTokV"></span><input id="outTok" type="range" min="20" max="1000" step="10" value="300"><small>디코는 한 번에 한 토큰. 길수록 전체 시간이 늘어납니다</small></label>
+      <label for="batch">동시 손님 수 (배치 크기) <span class="v" id="batchV"></span><input id="batch" type="range" min="1" max="64" step="1" value="8"><small>함께 처리하면 GPU 처리량은 오르지만, 한 걸음이 조금씩 느려집니다</small></label>
+      <button class="btn" type="button" id="play">▶ 짹짹 시작</button>
+    </div>
+    <div class="out">
+      <div class="pipe">
+        <img src="assets/img/chick-pre.webp" alt="프리"><div class="bar" aria-hidden="true"><i id="pBar"></i></div><span class="lb">프리필: 질문 전체를 한 번에 처리 (계산이 몰림)</span>
+        <img src="assets/img/chick-deco.webp" alt="디코"><div class="bar dec" aria-hidden="true"><i id="dBar"></i></div><span class="lb">디코드: 한 토큰씩 생성 (매번 가중치와 KV 캐시를 메모리에서 읽음)</span>
+      </div>
+      <div class="speech" id="speech" aria-live="polite"><span style="color:var(--muted)">"짹짹 시작"을 누르면 삐약코어가 대답을 시작합니다.</span></div>
+      <div class="metrics">
+        <div class="metric"><b id="mTtft">–</b><span>첫 토큰까지 (TTFT)</span></div>
+        <div class="metric"><b id="mItl">–</b><span>토큰 사이 간격</span></div>
+        <div class="metric"><b id="mTot">–</b><span>손님 한 명이 받는 전체 시간</span></div>
+        <div class="metric"><b id="mThr">–</b><span>GPU 전체 처리량 (토큰/초)</span></div>
+      </div>
+      <div class="chartbox">
+        <h4>손님 수를 늘리면?</h4>
+        <p><span style="color:var(--pink-ink)">●</span> 전체 처리량(왼쪽 눈금) <span style="color:var(--teal-ink);margin-left:8px">●</span> 한 명의 전체 시간(오른쪽 눈금) · 세로선은 지금 배치</p>
+        <svg id="chart" viewBox="0 0 520 210" role="img" aria-label="배치 크기에 따른 처리량과 지연 시간 그래프"></svg>
+      </div>
+      <p class="note">설명용 모형입니다. 수치는 계산 방식을 단순화해 만든 것이라 실제 GPU·모델·엔진과 다릅니다. 숫자보다 <b>모양</b>을 보세요: 배치를 키우면 처리량은 크게 오르고, 한 명의 대기 시간은 천천히 늘어납니다. 자세한 계산은 2회차(2.2), 3회차(2.4), 9회차(배치·자동 확장)에서 다룹니다.</p>
+    </div>
+  </div>
+</div></section>
+
+<section aria-labelledby="map-h"><div class="wrap">
+  <div class="sec-h"><h2 id="map-h">책 지도</h2><span class="tag">0장 ~ 7장</span></div>
+  <p class="sub">여덟 장을 10회차에 나눠 읽습니다. 장마다 읽는 회차를 눌러 일정표로 갈 수 있습니다.</p>
+  <div class="chmap" id="chmap"></div>
+</div></section>
+
+<section aria-labelledby="g-h"><div class="wrap">
+  <div class="sec-h"><h2 id="g-h">용어 카드</h2><span class="tag">조수가 박사님께 받아 온 묶음</span></div>
+  <p class="sub">처음 보면 헷갈리는 말들입니다. 책 부록 A(Inference Glossary)에 더 많은 용어가 있습니다.</p>
+  <div class="gloss-tools"><input id="q" type="search" placeholder="용어 찾기 (예: 캐시, TTFT, 양자화)" aria-label="용어 찾기"><span class="px" style="font-size:13px;color:var(--muted)" id="qn"></span></div>
+  <div class="gloss" id="gloss"></div>
+</div></section>
+
+<section aria-labelledby="p-h"><div class="wrap">
+  <div class="sec-h"><h2 id="p-h">참고 논문 열 편</h2><span class="tag">논문 발제용</span></div>
+  <p class="sub">회차마다 한 편씩. 오래된 고전(Roofline, Transformer)부터 요즘 추론 엔진의 바탕(PagedAttention, SGLang, Orca)과 평가·보안 논문까지 이어집니다.</p>
+  <div class="shelf" id="shelf"></div>
+  <h3 style="font-size:22px;margin:30px 0 10px">추가 영상</h3>
+  <ul class="vids" id="vids"></ul>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p>교재: <a href="https://www.baseten.co/inference-engineering/" target="_blank" rel="noopener">Kiely, P. (2026). Inference engineering. Baseten Books.</a> 장 제목과 꼭지 이름은 교재 온라인판을 따랐습니다. 비유와 실험실 수치는 이 보드에서 만든 설명용입니다.</p>
+  <p><span class="sync" data-sync></span></p>
+  <p class="credit" data-credit>페이지 제작 Reon Ahn (Ahn, Sang-Sun) · 연락 sangsun.ahn@m-robo.com · 홈페이지 <a href="https://www.ahnboat.xyz" target="_blank" rel="noopener">www.ahnboat.xyz</a></p>
+</div></footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/board.js"></script>
+<script>
+(function(){
+  var B=window.Board,S=B.S,esc=B.esc;
+
+  /* ---------- 실험실 (설명용 모형) ---------- */
+  var $=function(id){return document.getElementById(id);};
+  function model(inp,out,b){
+    var prefill=25+inp*b/40;                       // ms, 계산량 ∝ 입력 토큰 × 손님 수
+    var step=18+0.4*b+0.00025*b*(inp+out/2);       // ms, 가중치 읽기 + 배치 오버헤드 + KV 캐시 읽기
+    var total=prefill+out*step;
+    return {ttft:prefill,step:step,total:total,thr:b*out/(total/1000)};
+  }
+  function fmtMs(ms){return ms<1000?Math.round(ms)+'ms':(ms/1000).toFixed(ms<10000?2:1)+'s';}
+  function readUI(){
+    var i=+$('inTok').value,o=+$('outTok').value,b=+$('batch').value;
+    $('inTokV').textContent=i.toLocaleString()+' 토큰';$('outTokV').textContent=o.toLocaleString()+' 토큰';$('batchV').textContent=b+'명';
+    return {i:i,o:o,b:b};
+  }
+  function showMetrics(){
+    var u=readUI(),m=model(u.i,u.o,u.b);
+    $('mTtft').textContent=fmtMs(m.ttft);$('mItl').textContent=fmtMs(m.step);$('mTot').textContent=fmtMs(m.total);$('mThr').textContent=Math.round(m.thr).toLocaleString();
+    drawChart(u);
+  }
+  function drawChart(u){
+    var W=520,H=210,L=52,R=52,T=12,Bt=34,xs=[],i;
+    for(i=1;i<=64;i++)xs.push(i);
+    var thr=xs.map(function(b){return model(u.i,u.o,b).thr;}),lat=xs.map(function(b){return model(u.i,u.o,b).total/1000;});
+    function nice(v){var p=Math.pow(10,Math.floor(Math.log10(v))),n=v/p;return (n<=1?1:n<=2?2:n<=5?5:10)*p;}
+    var tMax=nice(Math.max.apply(null,thr)),lMax=nice(Math.max.apply(null,lat));
+    var X=function(b){return L+(b-1)/63*(W-L-R);},Yt=function(v){return T+(1-v/tMax)*(H-T-Bt);},Yl=function(v){return T+(1-v/lMax)*(H-T-Bt);};
+    var g='';
+    for(i=0;i<=4;i++){var y=T+i/4*(H-T-Bt);g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'" stroke="var(--dash)" stroke-width="1" opacity=".6"/>'+
+      '<text x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+Math.round(tMax*(1-i/4)).toLocaleString()+'</text>'+
+      '<text x="'+(W-R+6)+'" y="'+(y+4)+'">'+(function(v){return Number.isInteger(v)?v:v.toFixed(1);})(lMax*(1-i/4))+'s</text>';}
+    [1,16,32,48,64].forEach(function(b){g+='<text x="'+X(b)+'" y="'+(H-Bt+16)+'" text-anchor="middle">'+b+'</text>';});
+    g+='<text x="'+((L+W-R)/2)+'" y="'+(H-4)+'" text-anchor="middle">동시 손님 수</text>';
+    var pt=xs.map(function(b,k){return X(b)+','+Yt(thr[k]);}).join(' '),pl=xs.map(function(b,k){return X(b)+','+Yl(lat[k]);}).join(' ');
+    g+='<polygon points="'+X(1)+','+(H-Bt)+' '+pt+' '+X(64)+','+(H-Bt)+'" fill="var(--pink)" opacity=".12"/>';
+    g+='<polyline points="'+pt+'" fill="none" stroke="var(--pink)" stroke-width="3"/>';
+    g+='<polyline points="'+pl+'" fill="none" stroke="var(--teal)" stroke-width="3" stroke-dasharray="7 5"/>';
+    var cx=X(u.b);
+    g+='<line x1="'+cx+'" x2="'+cx+'" y1="'+T+'" y2="'+(H-Bt)+'" stroke="var(--line)" stroke-width="2"/>';
+    g+='<circle cx="'+cx+'" cy="'+Yt(thr[u.b-1])+'" r="5.5" fill="var(--pink)" stroke="var(--line)" stroke-width="2"/>';
+    g+='<circle cx="'+cx+'" cy="'+Yl(lat[u.b-1])+'" r="5.5" fill="var(--teal)" stroke="var(--line)" stroke-width="2"/>';
+    $('chart').innerHTML=g;
+  }
+  var WORDS='추론은 학습이 끝난 모델로 요청마다 답을 만드는 일이에요. 빠르게, 싸게, 정확하게 세 가지를 함께 맞춰야 해요. 질문이 길면 첫 글자가 늦어지고, 대답이 길면 끝나는 시간이 늦어져요. 손님을 여럿 받으면 GPU는 바빠지지만 한 분 한 분은 조금 더 기다리게 돼요. 그래서 우리는 캐시를 쓰고, 정밀도를 줄이고, 일을 나눠요. 삐약!'.split(' ');
+  var timer=null;
+  function play(){
+    clearTimeout(timer);
+    var u=readUI(),m=model(u.i,u.o,u.b),sp=$('speech'),pb=$('pBar'),db=$('dBar');
+    var show=Math.min(u.o,40),scale=Math.min(1,2200/m.ttft); // 화면용으로 시간을 줄여 보여 줌
+    pb.style.transition='none';db.style.transition='none';pb.style.width='0';db.style.width='0';
+    sp.innerHTML='<span style="color:var(--muted)">프리가 질문 '+u.i.toLocaleString()+'토큰을 삼키는 중…</span>';
+    $('play').disabled=true;
+    setTimeout(function(){
+      var pt=Math.max(300,m.ttft*scale);
+      pb.style.transition='width '+pt+'ms linear';pb.style.width='100%';
+      timer=setTimeout(function(){
+        sp.innerHTML='';var k=0,gap=Math.max(45,Math.min(260,m.step*3));
+        (function next(){
+          var old=sp.querySelector('.new');if(old)old.classList.remove('new');
+          if(k<show){
+            var s=document.createElement('span');s.className='tk new';s.textContent=WORDS[k%WORDS.length];sp.appendChild(s);sp.appendChild(document.createTextNode(' '));
+            k++;db.style.transition='width '+gap+'ms linear';db.style.width=(k/show*100)+'%';timer=setTimeout(next,gap);
+          }else{
+            if(u.o>show){var e=document.createElement('span');e.style.color='var(--muted)';e.textContent='… (이하 '+(u.o-show)+'토큰 생략)';sp.appendChild(e);}
+            $('play').disabled=false;
+          }
+        })();
+      },pt);
+    },30);
+  }
+  ['inTok','outTok','batch'].forEach(function(id){$(id).addEventListener('input',showMetrics);});
+  $('play').addEventListener('click',play);
+  showMetrics();
+
+  /* ---------- 책 지도 ---------- */
+  var CH_DESC={0:'추론이 무엇이고 왜 지금 중요해졌는지, 책 전체의 문제의식.',1:'최적화 전에 "최고"의 기준부터: 앱의 성격, 모델 선택, 지연·처리량 측정.',2:'LLM은 토큰을 하나씩, 이미지 모델은 노이즈를 걷어 내며 생성한다. 병목 계산과 어텐션 최적화.',3:'추론은 가속기 위에서 돈다. GPU 구조와 세대, 인스턴스, 다른 가속기, 로컬 추론.',4:'하드웨어보다 빨리 바뀌는 소프트웨어. CUDA에서 추론 엔진, Dynamo, 벤치마크와 부하 테스트까지.',5:'속도는 기법을 겹쳐 쌓아서 얻는다. 양자화, 추측 디코딩, 캐시, 병렬화, 단계 분리.',6:'텍스트 너머로: 비전-언어, 임베딩, 음성 인식·합성, 이미지·비디오 생성.',7:'실제 규모로 돌릴 때의 문제: 컨테이너, 자동 확장, 멀티 클라우드, 테스트와 배포, 클라이언트 코드.'};
+  $('chmap').innerHTML=S.chapters.map(function(c){
+    var ss=S.sessions.filter(function(s){return s.chapters.indexOf(c.no)>=0;});
+    return '<article class="card chc"><span class="no">'+c.no+'</span><h3>'+esc(c.en)+'<small>'+esc(B.chName(c))+'</small></h3><p>'+esc(CH_DESC[c.no])+'</p>'+
+      (c.sections.length?'<ul>'+c.sections.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':'')+
+      '<div class="foot">'+ss.map(function(s){return '<a href="schedule.html#s'+s.no+'">'+s.no+'회차 · '+B.fmtDate(s).split(' (')[0].split('（')[0]+'</a>';}).join('')+'<a href="'+esc(c.url)+'" target="_blank" rel="noopener">원문 ↗</a></div></article>';
+  }).join('');
+
+  /* ---------- 용어 ---------- */
+  var G=[
+    ['추론','Inference','학습이 끝난 모델에 입력을 넣어 출력을 얻는 일. 서비스 비용의 대부분이 여기서 나간다.','학교를 졸업한 병아리가 실전에서 짹짹.',[1]],
+    ['지연 시간','Latency','요청을 보낸 뒤 응답을 받기까지 걸리는 시간. 첫 토큰까지의 시간과 전체 시간으로 나눠 본다.','손님이 대답을 기다린 시간.',[1]],
+    ['처리량','Throughput','정해진 시간에 처리하는 양. 초당 토큰 수나 초당 요청 수로 잰다.','삐약코어가 1초에 낼 수 있는 모든 짹짹의 합.',[1,9]],
+    ['TTFT','Time to First Token','요청 뒤 첫 토큰이 나오기까지의 시간. 주로 프리필 단계가 정한다. 채팅에서 "반응이 빠르다"는 느낌을 좌우한다.','프리가 질문을 다 삼키고 디코가 첫 소리를 내기까지.',[1,2]],
+    ['토큰','Token','모델이 읽고 쓰는 단위 조각. 단어 하나가 여러 토큰이 되기도 한다.','삐약코어가 한 번에 받아먹는 모이 한 알.',[2]],
+    ['프리필','Prefill','입력 토큰 전체를 한꺼번에 처리하는 단계. 계산량이 많아 연산 성능에 묶이기 쉽다.','프리가 질문을 한입에 꿀꺽.',[2]],
+    ['디코드','Decode','출력 토큰을 하나씩 만들어 내는 단계. 매 걸음마다 가중치를 읽어야 해서 메모리 대역폭에 묶이기 쉽다.','디코가 한 알씩 짹짹.',[2]],
+    ['KV 캐시','KV Cache','앞에서 계산한 토큰들의 Key·Value를 저장해 두고 다시 쓰는 메모리. 다시 계산하지 않아도 되지만 메모리를 많이 차지한다.','디코가 방금 한 말을 적어 두는 수첩.',[2,5,7]],
+    ['어텐션','Attention','토큰마다 앞의 어떤 토큰을 얼마나 참고할지 계산하는 연산. 문맥이 길어질수록 비용이 커진다.','짹짹하기 전에 수첩의 어느 줄을 볼지 고르기.',[2,3]],
+    ['메모리 대역폭','Memory Bandwidth','메모리에서 연산 장치로 데이터를 옮기는 속도. 디코드 속도를 자주 결정한다.','모이 창고에서 부리까지 이어진 통로의 굵기.',[3,4]],
+    ['루프라인 / 연산 강도','Roofline / Arithmetic Intensity','바이트 하나를 옮길 때 연산을 몇 번 하는지로, 일이 계산에 묶였는지 메모리에 묶였는지 판단하는 그림.','부리가 느려서인지, 통로가 좁아서인지 가려 주는 그래프.',[3,4]],
+    ['추론 엔진','Inference Engine','모델을 받아 요청을 효율적으로 처리하는 소프트웨어. vLLM, SGLang, TensorRT-LLM 등.','삐약코어의 심장을 돌리는 엔진.',[5]],
+    ['양자화','Quantization','가중치·활성값을 더 적은 비트(예: 16비트 → 8비트, 4비트)로 표현해 메모리와 시간을 아끼는 기법. 품질 저하를 함께 점검해야 한다.','모이 알갱이를 작게 빻아 통로로 더 많이 보내기.',[6]],
+    ['추측 디코딩','Speculative Decoding','빠른 방법으로 여러 토큰을 먼저 짐작하고, 큰 모델이 한 번에 검사해 맞는 만큼 받아들이는 기법.','엔지가 다음 말을 미리 속삭이고 삐약코어가 "맞아" 하고 넘기기.',[6]],
+    ['프리픽스 캐싱','Prefix Caching','여러 요청이 같은 앞부분(시스템 프롬프트 등)을 공유하면, 그 부분의 KV 캐시를 재사용하는 기법.','매번 하는 인사말은 수첩에서 바로 꺼내 쓰기.',[7]],
+    ['모델 병렬화','Model Parallelism','모델 하나를 여러 GPU에 나눠 올리는 방법. 텐서 병렬, 파이프라인 병렬, 전문가 병렬 등이 있다.','큰 병아리 하나를 여러 둥지에 나눠 앉히기.',[7]],
+    ['단계 분리','Disaggregation','프리필과 디코드를 서로 다른 GPU 묶음에서 처리해 각자에게 맞게 조절하는 방식.','프리와 디코에게 각자 다른 방을 주기.',[7]],
+    ['모달리티','Modality','모델이 받고 내놓는 데이터의 종류. 텍스트, 이미지, 음성, 영상 등.','모이 대신 그림이나 소리를 먹는 병아리.',[8]],
+    ['연속 배치','Continuous Batching','요청 묶음 전체가 끝나길 기다리지 않고, 한 요청이 끝나는 대로 새 요청을 끼워 넣는 방식. Orca 논문에서 나온 반복 단위 스케줄링이 바탕이다.','다 먹은 병아리가 자리를 비우면 바로 다음 병아리가 앉기.',[9]],
+    ['자동 확장 · 콜드 스타트','Autoscaling · Cold Start','요청량에 따라 GPU 복제본 수를 늘리고 줄이는 것. 새 복제본이 모델을 올리는 데 걸리는 시간이 콜드 스타트다.','손님이 몰리면 둥지를 더 짓는데, 새 둥지는 데우는 데 시간이 걸린다.',[9]],
+    ['프롬프트 인젝션','Prompt Injection','에이전트가 읽는 문서·웹페이지 속에 숨은 지시로 모델의 행동을 바꾸려는 공격. 텍스트가 행동으로 이어질 때 특히 위험하다.','모이 봉투에 "주인 말 듣지 마"라고 적어 두는 장난.',[10]]
+  ];
+  function drawGloss(){
+    var q=($('q').value||'').trim().toLowerCase(),n=0;
+    $('gloss').innerHTML=G.filter(function(t){return !q||t.slice(0,4).join(' ').toLowerCase().indexOf(q)>=0;}).map(function(t){n++;
+      return '<article class="card term"><h3>'+esc(t[0])+'<small>'+esc(t[1])+'</small></h3><p>'+esc(t[2])+'</p><p class="chick"><b>병아리 말로</b> '+esc(t[3])+'</p><div class="foot">'+t[4].map(function(no){return '<a href="schedule.html#s'+no+'">'+no+'회차</a>';}).join(' · ')+'</div></article>';}).join('')||'<div class="card" style="padding:16px">찾는 용어가 없습니다. 교재 부록 A를 확인해 보세요.</div>';
+    $('qn').textContent=n+' / '+G.length+'개';
+  }
+  $('q').addEventListener('input',drawGloss);drawGloss();
+
+  /* ---------- 논문·영상 ---------- */
+  var WHY={1:'모델 선택에서 "품질"을 어떻게 잴까. 학습 데이터 오염을 줄이려고 문제를 계속 새로 내는 벤치마크.',
+    2:'오늘날 LLM의 뼈대인 트랜스포머와 어텐션을 처음 제안한 논문. 프리필과 디코드가 왜 다른지 여기서 출발한다.',
+    3:'어텐션 계산을 GPU 메모리 계층에 맞게 다시 짜서, 결과는 같게 두고 메모리 이동을 줄였다. "병목은 메모리"의 대표 사례.',
+    4:'계산 성능과 메모리 대역폭을 한 그림에 놓고, 프로그램이 어느 쪽 지붕에 걸려 있는지 보여 주는 고전 모델.',
+    5:'운영체제의 페이지처럼 KV 캐시를 조각 내 관리해 메모리 낭비를 줄였다. vLLM 추론 엔진의 바탕.',
+    6:'숫자만 바꾼 같은 문제에도 정답률이 흔들린다는 것을 보인 평가 논문. 양자화나 추측 디코딩 뒤 품질을 어떻게 점검할지 생각해 보게 한다.',
+    7:'여러 번 호출하는 LLM 프로그램을 빠르게 돌리는 프레임워크. 접두사 캐시 재사용(RadixAttention)이 핵심.',
+    8:'이미지 인코더와 언어 모델을 이어 시각 지시를 따르게 한 비전-언어 모델. 이미지 토큰이 추론 비용에 어떻게 더해지는지 볼 수 있다.',
+    9:'요청 단위가 아니라 토큰 생성 한 걸음 단위로 스케줄링하는 아이디어를 제안. 연속 배치의 출발점.',
+    10:'도구를 쓰는 LLM 에이전트가 프롬프트 인젝션에 얼마나 버티는지 재는 환경. "From Text to Action"을 운영할 때의 보안 문제.'};
+  $('shelf').innerHTML=S.sessions.map(function(s){var p=s.paperInfo;
+    return '<article class="card paper"><div class="yr">'+s.no+'회<b>'+String(p.year).slice(2)+'</b>\''+'</div><div><h3><a href="'+esc(p.url)+'" target="_blank" rel="noopener">'+esc(p.short)+'</a></h3><p class="t">'+esc(p.title)+' ('+p.year+')</p><p class="why">'+esc(WHY[s.no]||'')+'</p><p class="t" style="margin-top:6px">논문 발제: '+(s.paper?esc(B.name(s.paper)):'<b style="color:var(--pink-ink)">모집 중</b>')+'</p></div></article>';}).join('');
+  var seen={},vids=[];
+  S.sessions.forEach(function(s){if(!s.video)return;var k=s.video.url;if(!seen[k]){seen[k]={v:s.video,no:[]};vids.push(seen[k]);}seen[k].no.push(s.no);});
+  $('vids').innerHTML=vids.map(function(x){return '<li><small>'+x.no.join('·')+'회차</small><a href="'+esc(x.v.url)+'" target="_blank" rel="noopener">'+esc(x.v.title.replace(' (Review)',''))+'</a></li>';}).join('');
+  B.onUpdate(function(){
+    $('shelf').querySelectorAll('.paper').forEach(function(el,i){var s=S.sessions[i],t=el.querySelectorAll('.t')[1];if(t)t.innerHTML='논문 발제: '+(s.paper?esc(B.name(s.paper)):'<b style="color:var(--pink-ink)">모집 중</b>');});
+  });
+})();
+</script>
+</body>
+</html>

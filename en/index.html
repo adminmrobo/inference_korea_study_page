@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" data-base="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inference Korea Study Board</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Inference Korea: a 10-week inference engineering study group reading Inference Engineering together. Every Saturday at 8 PM KST on Zoom.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/board.css">
+<style>
+/* Hero: character line-up on stage */
+.stage{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:8px;margin-top:22px;position:relative}
+.stage figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+.stage .nm{font-family:var(--display);font-size:14px;background:var(--panel);color:var(--ink);border:2.5px solid var(--line);border-radius:999px;padding:0 10px;white-space:nowrap}
+.stage .lead img{width:clamp(96px,16vw,160px);border-radius:50% 50% 16px 16px;background:var(--cream);border:3px solid var(--line);box-shadow:4px 4px 0 var(--shadow)}
+.flock{display:flex;align-items:end;gap:0}
+.flock img{height:auto;filter:drop-shadow(3px 4px 0 rgba(42,18,87,.25))}
+.flock .core{width:clamp(130px,22vw,230px);margin:0 -10px}
+.flock .s{width:clamp(70px,11vw,120px)}
+.flock .bob{animation:bob 2.4s ease-in-out infinite}
+.flock .bob.d1{animation-delay:-.6s}.flock .bob.d2{animation-delay:-1.2s}.flock .bob.d3{animation-delay:-1.8s}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.arrive{justify-self:end;display:flex;align-items:end;gap:6px;position:relative}
+.arrive img{image-rendering:pixelated}
+.arrive .asst img{width:clamp(70px,11vw,118px)}
+.arrive .fly img{width:clamp(56px,8.5vw,92px)}
+.arrive .tagline{position:absolute;top:-30px;right:0;font-family:var(--px);font-size:12px;background:var(--pink);color:#fff;border:2.5px solid var(--line);border-radius:8px;padding:2px 10px;transform:rotate(3deg);white-space:nowrap}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+
+/* Next meeting */
+.nextcard{display:grid;grid-template-columns:220px minmax(0,1fr);overflow:hidden}
+.nextcard .dd{background:var(--band);color:#FFF4CF;padding:22px 20px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.nextcard .dd b{font-family:var(--display);font-weight:400;font-size:clamp(46px,7vw,68px);line-height:1;color:var(--yolk)}
+.nextcard .dd span{font-family:var(--px);font-size:13px}
+.nextcard .body{padding:18px 22px;display:grid;gap:10px;min-width:0}
+.nextcard h3{font-size:26px;margin:0}
+.nextcard .en{color:var(--muted);font-size:14.5px;margin:-6px 0 0}
+.slots{display:flex;gap:10px;flex-wrap:wrap}
+.slot{display:flex;align-items:center;gap:8px;border:2.5px solid var(--line);border-radius:999px;padding:3px 14px 3px 4px;background:var(--bg2)}
+.slot .k{font-family:var(--px);font-size:11.5px;background:var(--band);color:#FFF4CF;border-radius:999px;padding:1px 8px}
+.slot.open{border-style:dashed;border-color:var(--dash);background:transparent;color:var(--muted)}
+.slot.open .k{background:var(--dash)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* Overview + egg progress board */
+.split{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;align-items:start}
+.split .card{padding:20px 22px}
+.eggs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px 8px;margin:6px 0 12px}
+.egg{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--ink)}
+.egg svg{width:44px;height:54px}
+.egg small{font-family:var(--px);font-size:11.5px;color:var(--muted);text-align:center;line-height:1.35}
+.egg.next svg{animation:wob 1.2s ease-in-out infinite}
+@keyframes wob{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+
+/* Guide cards */
+.doors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.door{padding:18px 20px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--ink);position:relative}
+.door:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--shadow)}
+.door .num{font-family:var(--px);font-size:12px;color:var(--muted)}
+.door h3{margin:0;font-size:24px}
+.door p{margin:0;color:var(--muted);font-size:15px}
+.door img{position:absolute;right:12px;top:-26px;width:62px}
+.door img.pix{image-rendering:pixelated}
+
+/* Crew */
+.crew{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.mate{padding:14px 16px;display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:center}
+.mate img{width:64px;height:64px;object-fit:contain}
+.mate img.pix{image-rendering:pixelated}
+.mate h4{margin:0;font-size:18px}
+.mate p{margin:0;font-size:14px;color:var(--muted);line-height:1.55}
+.mate .role{font-family:var(--px);font-size:11px;color:var(--teal-ink)}
+
+/* How to join */
+.join{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);gap:20px}
+.zoomcard{padding:18px 22px;display:flex;flex-direction:column;gap:10px}
+.zc-head{display:flex;align-items:center;gap:10px}
+.zc-head h3{margin:0;font-size:24px}
+.zc-badge{font-family:var(--px);font-size:12px;background:#2D8CFF;color:#fff;border:2.5px solid var(--line);border-radius:8px;padding:1px 8px}
+.zc-hello{margin:0;font-family:var(--display);font-size:19px;color:var(--teal-ink)}
+.zc-info{display:grid;grid-template-columns:70px minmax(0,1fr);gap:6px 12px;margin:0;align-items:center}
+.zc-info dt{font-family:var(--px);font-size:12.5px;color:var(--muted)}
+.zc-info dd{margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mono{font-family:var(--px);font-size:20px;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.copy{font:inherit;font-family:var(--px);font-size:12px;background:var(--chip);color:var(--chip-ink);border:2px solid var(--line);border-radius:999px;padding:0 10px;cursor:pointer}
+.special{padding:18px 20px;display:flex;flex-direction:column;gap:8px;position:relative}
+.special h3{margin:0;font-size:21px}
+.special p{margin:0;font-size:14.5px;color:var(--muted);padding-right:54px}
+.sp-tag{font-family:var(--px);font-size:11.5px;color:var(--pink-ink)}
+.special img{position:absolute;right:12px;bottom:12px;width:52px;image-rendering:pixelated}
+.special .row{margin-top:auto}
+@media (max-width:980px){.join{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.zoomcard{grid-column:1 / -1}}
+@media (max-width:620px){.join{grid-template-columns:minmax(0,1fr)}}
+
+/* LangCon */
+.lc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);overflow:hidden}
+.lc-band{position:relative;overflow:hidden;background:var(--hero);color:var(--hero-ink);padding:22px 22px 24px;border-right:3px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.lc-band > *:not(.stripes){position:relative}
+.lc-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lc-pill{font-family:var(--display);font-size:clamp(26px,3.6vw,36px);background:var(--band);color:var(--yolk);padding:2px 22px 4px;border-radius:999px;line-height:1.2}
+.lc-state{font-family:var(--px);font-size:12.5px;background:var(--panel);color:var(--ink);border:2.5px solid var(--line);border-radius:999px;padding:1px 10px}
+.lc-theme{margin:0;font-family:var(--display);font-size:clamp(19px,2.3vw,24px);line-height:1.35}
+.lc-facts{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 10px;margin:0;font-size:14.5px;max-width:calc(100% - 90px)}
+.lc-facts dt{font-family:var(--px);font-size:12.5px;padding-top:2px}
+.lc-facts dd{margin:0;font-weight:500}
+.lc-links{display:flex;gap:8px;flex-wrap:wrap}
+.lc-links .btn{font-size:14px;padding:3px 12px}
+.lc-chick{position:absolute!important;right:10px;bottom:8px;width:96px;filter:drop-shadow(3px 4px 0 rgba(42,18,87,.25))}
+.lc-body{padding:18px 20px;min-width:0}
+.lc-body h3{margin:0 0 8px;font-size:21px}
+.lc-talks{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.lc-talks li{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;font-size:14px;line-height:1.45}
+.lc-talks time{font-family:var(--px);font-size:12px;color:var(--muted);padding-top:2px;font-variant-numeric:tabular-nums}
+.lc-talks small{display:block;color:var(--muted);font-size:12.5px}
+.lc-staff{margin:12px 0 0;font-size:13px;color:var(--muted)}
+.lc-say{margin-top:20px;max-width:880px}
+.lc-hist-h{font-size:20px;margin:24px 0 10px}
+.lc-hist{display:flex;gap:10px;flex-wrap:wrap}
+.lc-hist div{border:2.5px solid var(--line);border-radius:14px;padding:6px 14px;background:var(--panel);display:flex;gap:10px;align-items:baseline}
+.lc-hist b{font-family:var(--display);font-weight:400;font-size:19px}
+.lc-hist a{font-family:var(--px);font-size:12.5px}
+@media (max-width:860px){.lc{grid-template-columns:minmax(0,1fr)}.lc-band{border-right:0;border-bottom:3px solid var(--line)}}
+
+@media (max-width:860px){
+  .doors{grid-template-columns:minmax(0,1fr)}
+  .split{grid-template-columns:minmax(0,1fr)}
+  .nextcard{grid-template-columns:minmax(0,1fr)}
+  .nextcard .dd{flex-direction:row;align-items:baseline;gap:14px;flex-wrap:wrap}
+}
+@media (max-width:620px){
+  .stage{grid-template-columns:minmax(0,1fr) minmax(0,1fr);row-gap:16px}
+  .stage .flock{grid-column:1 / -1;order:-1;justify-content:center}
+  .arrive .tagline{top:-26px}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="ticker" role="status"><span class="lamp" aria-hidden="true"></span><div class="run"><span id="tickerText">Inference Korea · Every Saturday 8 PM KST · Zoom</span></div></div>
+  <div class="navbar"><div class="wrap">
+    <a class="brand" href="index.html"><img src="../assets/img/chick-core.webp" alt=""><span>Inference Korea <small>Chick Inference Lab</small></span></a>
+    <nav class="nav" aria-label="Study board">
+      <a href="index.html"><span class="n">01</span>Briefing</a>
+      <a href="schedule.html"><span class="n">02</span>Schedule</a>
+      <a href="topic.html"><span class="n">03</span>Topic Guide</a>
+      <a href="guide.html"><span class="n">04</span>Study Guide</a>
+    </nav>
+  </div></div>
+</div>
+
+<header class="hero">
+  <div class="stripes" aria-hidden="true"></div>
+  <div class="wrap">
+    <span class="kicker">INFERENCE KOREA · FROM TEXT TO ACTION · FALL 2026 · 10 WEEKS</span>
+    <h1>The chicks’ <span class="pill">inference engine</span> bootcamp</h1>
+    <p class="lede">Our chick gobbles up tokens and peeps out the next one. So why is it zippy some days and sluggish on others? Over 10 weeks we read <i>Inference Engineering</i> together, from GPUs and inference engines to quantization, deployment and operations. The Professor is busy, so the lab sent the Assistant and the Fruit Fly Researcher to help out.</p>
+    <div class="stage">
+      <figure class="lead"><img src="../assets/img/leader.webp" alt="Study Leader: long hair, glasses and a blue shirt, humming a tune"><figcaption class="nm">Study Leader</figcaption></figure>
+      <div class="flock" aria-label="Four chicks">
+        <img class="s bob d1" src="../assets/img/chick-pre.webp" alt="Pree the chick">
+        <img class="core bob" src="../assets/img/chick-core.webp" alt="PeepCore, a big chick with a circuit heart on its chest">
+        <img class="s bob d2" src="../assets/img/chick-deco.webp" alt="Deco the chick">
+        <img class="s bob d3" src="../assets/img/chick-engi.webp" alt="Engi the chick, holding a wrench">
+      </div>
+      <div class="arrive">
+        <span class="tagline">Sent by the Professor’s lab</span>
+        <figure class="asst"><img src="../assets/img/assistant.webp" alt="Assistant: a pixel character with pink pigtails"><figcaption class="nm">Assistant</figcaption></figure>
+        <figure class="fly"><img src="../assets/img/fly.webp" alt="Fruit Fly Researcher: a pixel fruit fly in a helmet and lab coat"><figcaption class="nm">Fruit Fly</figcaption></figure>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a class="btn" href="schedule.html">See the 10-week schedule →</a>
+      <a class="btn ghost" href="topic.html">What is inference engineering?</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section aria-labelledby="next-h"><div class="wrap">
+  <div class="sec-h"><h2 id="next-h">Next meeting</h2><span class="tag">NEXT MEETING</span></div>
+  <p class="sub">Dates are calculated automatically in Korea time (KST).</p>
+  <div id="nextBox"><div class="card" style="padding:18px 22px">Loading the schedule… If nothing changes, check the <a href="schedule.html">Schedule</a> page.</div></div>
+</div></section>
+
+<section id="zoom" aria-labelledby="zoom-h"><div class="wrap">
+  <div class="sec-h"><h2 id="zoom-h">How to join</h2><span class="tag">ZOOM · SAT 20:00 KST WEEKLY</span></div>
+  <div class="join">
+    <article class="card zoomcard">
+      <div class="zc-head"><span class="zc-badge">ZOOM</span><h3>Join the Zoom meeting</h3></div>
+      <p class="zc-hello">See you Saturday at 8 PM (KST).</p>
+      <dl class="zc-info">
+        <dt>Meeting ID</dt><dd><b class="mono">884 5916 2312</b> <button class="copy" type="button" data-copy="884 5916 2312">Copy</button></dd>
+        <dt>Passcode</dt><dd><b class="mono">11111</b> <button class="copy" type="button" data-copy="11111">Copy</button></dd>
+      </dl>
+      <div class="row"><a class="btn" href="https://us02web.zoom.us/j/88459162312?pwd=jSA93w9V4X3HRXhyauV6fANPBrJrxP.1" target="_blank" rel="noopener">Join Zoom meeting →</a><button class="btn ghost" type="button" data-copy="https://us02web.zoom.us/j/88459162312?pwd=jSA93w9V4X3HRXhyauV6fANPBrJrxP.1">Copy link</button></div>
+    </article>
+    <article class="card special">
+      <span class="sp-tag">SPECIAL SESSION</span>
+      <h3>Special session · guest lecture</h3>
+      <p>On top of the 10 regular sessions, we host talks by invited speakers. Dates, speakers and topics are announced on <b>Discord</b> first.</p>
+      <div class="row" id="discordRow"></div>
+      <img class="pix" src="../assets/img/fly.webp" alt="">
+    </article>
+    <article class="card special slides">
+      <span class="sp-tag">SLIDES</span>
+      <h3>Slides archive</h3>
+      <p>Book and paper presentation slides for every session live in a Google Drive folder. Use them to review or to catch up on a session you missed.</p>
+      <div class="row"><a class="btn teal" href="https://drive.google.com/drive/folders/1NxhUYActOe-POABwqiYdxXBaBg5tY44c" target="_blank" rel="noopener">Open the Slides folder ↗</a></div>
+      <img class="pix" src="../assets/img/assistant.webp" alt="">
+    </article>
+  </div>
+</div></section>
+
+<section aria-labelledby="log-h"><div class="wrap">
+  <div class="sec-h"><h2 id="log-h">Lab arrival log</h2><span class="tag">LOG · ONE WEEK BEFORE KICKOFF</span></div>
+  <p class="sub">The Professor is away at a conference. Instead, a letter arrived, along with two helpers.</p>
+  <div class="log">
+    <div class="sys">[SYSTEM] Dispatch notice received from the Professor’s lab. Personnel: Assistant ×1, Fruit Fly Researcher ×1. Attached: one letter, a 10-week map, one stack of glossary cards.
+      <div class="letter"><span class="seal">Professor’s Lab</span>"Dear esteemed Study Leader! Please accept my sincere apologies for being unable to call on you in person, owing to a pressing conference engagement. Upon hearing that the chicks are to learn about inference engines, I have taken the liberty of sending our lab’s Assistant and Fruit Fly Researcher, modest though their help may be. Whether it is arranging the schedule or preparing presentations, please do not hesitate to put them to work. Ten weeks from now, on the day all ten eggs have hatched, I shall most humbly ask to hear of the results. With my enduring gratitude." <span style="display:block;text-align:right;margin-top:4px">— The Professor</span></div>
+    </div>
+    <div class="say lead"><div class="ava"><img src="../assets/img/leader.webp" alt=""></div><div class="bub"><span class="who">Study Leader</span>Welcome aboard! This fall we’re reading <i>Inference Engineering</i> together for 10 weeks. Every Saturday at 8 PM: one slice of the book and one paper. Each session has one book presenter and one paper presenter.</div></div>
+    <div class="say chick"><div class="ava"><img src="../assets/img/chick-core.webp" alt=""></div><div class="bub"><span class="who">PeepCore</span>Peep! I gobble up tokens and peep out the next one, one at a time. But when a crowd shows up, my answers slow down. Am I hungry, or is my head just too small?</div></div>
+    <div class="say asst pixel"><div class="ava pix"><img src="../assets/img/assistant.webp" alt=""></div><div class="bub"><span class="who">Assistant</span>PeepCore? There’s a “core” in your name! Are you a quad-core, by any chance? Four cores, four chicks. Perfect match. Hehe.</div></div>
+    <div class="say fly pixel"><div class="ava pix"><img src="../assets/img/fly.webp" alt=""></div><div class="bub"><span class="who">Fruit Fly Researcher</span>Quad-core means CPU. PeepCore, are you secretly a Pentium? Is that “peep” just the sound of you crunching numbers?</div></div>
+    <div class="say chick"><div class="ava"><img src="../assets/img/chick-core.webp" alt=""></div><div class="bub"><span class="who">PeepCore</span>Peep! I’m not a CPU! I run on a GPU with thousands of cores. But no matter how many cores there are, if the feed (data) arrives slowly, they all just sit there with their beaks open, waiting. That’s the memory bandwidth story. It’s coming up in Session 3!</div></div>
+    <div class="say asst pixel"><div class="ava pix"><img src="../assets/img/assistant.webp" alt=""></div><div class="bub"><span class="who">Assistant</span>Whoa, so it’s the pipe, not the number of cores! It’s all in the map and glossary cards the Professor packed for us. This time I came in a lab coat instead of pajamas, so I’ll help properly.</div></div>
+    <div class="say fly pixel"><div class="ava pix"><img src="../assets/img/fly.webp" alt=""></div><div class="bub"><span class="who">Fruit Fly Researcher</span>I sorted out the order. Ch. 0 concepts → Ch. 2 models → Ch. 3 GPUs → Ch. 4 software → Ch. 5 optimization techniques → Ch. 6 modalities → Ch. 7 production. The last week is a full review. Empty presenter slots are highlighted in yellow on the schedule!</div></div>
+    <div class="say chick"><div class="ava"><img src="../assets/img/chick-pre.webp" alt=""></div><div class="bub"><span class="who">Pree · Deco · Engi</span>Pree gulps the whole question in one bite, Deco peeps out the answer one grain at a time, and Engi grabs a wrench to make it all faster! What our names mean? We’ll tell you in Session 2.</div></div>
+  </div>
+</div></section>
+
+<section aria-labelledby="over-h"><div class="wrap">
+  <div class="sec-h"><h2 id="over-h">Study at a glance</h2><span class="tag">OVERVIEW</span></div>
+  <div class="split">
+    <div class="card">
+      <dl class="facts" id="facts">
+        <dt>Textbook</dt><dd><a href="https://www.baseten.co/inference-engineering/" target="_blank" rel="noopener">Kiely, P. (2026). <i>Inference engineering</i>. Baseten Books.</a><br><span style="color:var(--muted);font-size:14.5px">Grab the free PDF from the publisher’s site or <a href="https://www.baseten.co/inference-engineering/book/" target="_blank" rel="noopener">read it online</a>.</span></dd>
+        <dt>Community</dt><dd><a href="https://songys.github.io/inference-korea/" target="_blank" rel="noopener">Inference Korea</a> · a study community for inference engineering: how to run AI models efficiently and reliably</dd>
+        <dt>Time</dt><dd>Every Saturday at 8 PM (KST, tentative)</dd>
+        <dt>Period</dt><dd id="periodDd">Oct 24 – Dec 26, 2026 · 10 sessions</dd>
+        <dt>Where</dt><dd><b>Online on Zoom</b> · <a href="#zoom">See how to join</a></dd>
+        <dt>Format</dt><dd>Each session, members take turns giving a <b>Book presentation</b> (a summary of the reading) and a <b>Paper presentation</b> (one related paper), then we talk it over together. Personal projects and hands-on sessions are in the works too.</dd>
+        <dt>Special</dt><dd>Beyond the regular sessions, we host <b>guest lectures</b>. Details are announced on Discord.</dd>
+        <dt>Slides</dt><dd><a href="https://drive.google.com/drive/folders/1NxhUYActOe-POABwqiYdxXBaBg5tY44c" target="_blank" rel="noopener">Slides folder on Google Drive</a></dd>
+        <dt>For</dt><dd>Anyone who has used LLMs and wonders how speed, cost and quality play out when you actually serve a model</dd>
+      </dl>
+    </div>
+    <div class="card">
+      <h3 style="margin:0;font-size:22px">10 eggs</h3>
+      <p style="margin:2px 0 0;color:var(--muted);font-size:14.5px">Each time a session wraps up and is marked done, one egg hatches.</p>
+      <div class="eggs" id="eggs"></div>
+      <p style="margin:0;font-family:var(--px);font-size:13px" id="eggTxt"></p>
+    </div>
+  </div>
+</div></section>
+
+<section id="langcon" aria-labelledby="lc-h"><div class="wrap">
+  <div class="sec-h"><h2 id="lc-h">Our event: LangCon</h2><span class="tag">#2026LangCon</span></div>
+  <p class="sub">A language model conference this study group helps run. Our four chicks were born on the LangCon 2026 poster!</p>
+  <article class="card lc">
+    <div class="lc-band">
+      <div class="stripes" aria-hidden="true"></div>
+      <div class="lc-head">
+        <span class="lc-pill" id="lcName">LangCon 2026</span>
+        <span class="lc-state" id="lcState"></span>
+      </div>
+      <p class="lc-theme" id="lcTheme">From Text to Action</p>
+      <dl class="lc-facts">
+        <dt>When</dt><dd id="lcDate"></dd>
+        <dt>Where</dt><dd id="lcVenue"></dd>
+        <dt>Sponsors</dt><dd id="lcSpon"></dd>
+      </dl>
+      <div class="lc-links" id="lcLinks"></div>
+      <img class="lc-chick" src="../assets/img/chick-core.webp" alt="">
+    </div>
+    <div class="lc-body">
+      <h3>Talk program</h3>
+      <ol class="lc-talks" id="lcTalks"></ol>
+      <p class="lc-staff" id="lcStaff"></p>
+    </div>
+  </article>
+  <div class="say chick lc-say"><div class="ava"><img src="../assets/img/chick-engi.webp" alt=""></div><div class="bub"><span class="who">Engi</span>LangCon 2026’s theme was “From Text to Action.” Our final Session 10 paper (AgentDojo) is about security when agents take action, so we come full circle!</div></div>
+  <h3 class="lc-hist-h">Past LangCons</h3>
+  <div class="lc-hist" id="lcHist"></div>
+</div></section>
+
+<section aria-labelledby="door-h"><div class="wrap">
+  <div class="sec-h"><h2 id="door-h">Tour the board</h2><span class="tag">MAP</span></div>
+  <p class="sub">This board has four pages. You’re on the first one.</p>
+  <div class="doors" style="margin-top:34px">
+    <a class="card door" href="schedule.html"><img class="pix" src="../assets/img/fly.webp" alt=""><span class="num">02 · run by the Fruit Fly</span><h3>Schedule</h3><p>All 10 sessions on an egg map: readings, presenters, papers and videos, plus add-to-calendar.</p></a>
+    <a class="card door" href="topic.html"><img src="../assets/img/chick-core.webp" alt=""><span class="num">03 · run by PeepCore</span><h3>Topic Guide</h3><p>What inference engineering is, a map of the book’s eight chapters, a token generation experiment and must-know terms.</p></a>
+    <a class="card door" href="guide.html"><img class="pix" src="../assets/img/assistant.webp" alt=""><span class="num">04 · run by the Assistant</span><h3>Study Guide</h3><p>How a meeting runs, how to prep book and paper presentations, open presenter slots and how to sign up.</p></a>
+  </div>
+</div></section>
+
+<section aria-labelledby="crew-h"><div class="wrap">
+  <div class="sec-h"><h2 id="crew-h">Cast</h2><span class="tag">CREW</span></div>
+  <div class="crew">
+    <div class="card mate"><img src="../assets/img/leader.webp" alt=""><div><span class="role">Runs the study</span><h4>Study Leader</h4><p>Keeps track of the schedule and presenters. If you hear humming, things are going well.</p></div></div>
+    <div class="card mate"><img class="pix" src="../assets/img/assistant.webp" alt=""><div><span class="role">From the Professor’s lab</span><h4>Assistant</h4><p>Here on an errand for the Professor. Helps with the presentation prep checklist and running meetings.</p></div></div>
+    <div class="card mate"><img class="pix" src="../assets/img/fly.webp" alt=""><div><span class="role">From the Professor’s lab</span><h4>Fruit Fly Researcher</h4><p>A stickler for order and schedules. Always the first to spot an empty presenter slot.</p></div></div>
+    <div class="card mate"><img src="../assets/img/chick-core.webp" alt=""><div><span class="role">Inference engine</span><h4>PeepCore</h4><p>The circuit heart on its chest is the model. Takes in tokens, puts out the next one.</p></div></div>
+    <div class="card mate"><img src="../assets/img/chick-pre.webp" alt=""><div><span class="role">Prefill</span><h4>Pree</h4><p>Swallows the whole prompt in one gulp. Doing it all at once makes it compute-heavy.</p></div></div>
+    <div class="card mate"><img src="../assets/img/chick-deco.webp" alt=""><div><span class="role">Decode</span><h4>Deco</h4><p>Peeps out the answer one grain at a time. Checking its memory (the KV cache) every step keeps memory busy.</p></div></div>
+    <div class="card mate"><img src="../assets/img/chick-engi.webp" alt=""><div><span class="role">Optimization</span><h4>Engi</h4><p>The chick with the wrench. Tunes the engine with quantization, caching and parallelism.</p></div></div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p><b style="color:var(--ink)"><a href="https://songys.github.io/inference-korea/" target="_blank" rel="noopener">Inference Korea</a></b> · Chick Inference Lab study board. Presenters and dates are pulled automatically from the <a href="https://docs.google.com/spreadsheets/d/1pVf5_bPLA5_UhImUO7EJ_Puh3Q5b485w65WVo1QlFsI/edit?usp=sharing" target="_blank" rel="noopener">study timetable (Google Sheets)</a>.</p>
+  <p>The chicks come from the LangCon 2026 poster; the Assistant and the Fruit Fly Researcher come from the series “How Does AI Tell Images Apart?”</p>
+  <p><span class="sync" data-sync></span></p>
+  <p class="credit" data-credit>Page by Reon Ahn (Ahn, Sang-Sun) · Contact sangsun.ahn@m-robo.com · Website <a href="https://www.ahnboat.xyz" target="_blank" rel="noopener">www.ahnboat.xyz</a></p>
+</div></footer>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/board.js"></script>
+<script>
+(function(){
+  var B=window.Board,S=B.S,esc=B.esc;
+  /* Strings used on this page */
+  var L10N={
+    book:'Book',paper:'Paper',open:'Presenter wanted',
+    finished:'All 10 sessions are done. All ten eggs have hatched!',
+    nth:function(n){return 'Session '+n+' / 10';},
+    ch:function(n,name){return 'Ch. '+n+' '+name;},
+    range:'Reading',ref:'Paper',cal:'Add to Google Calendar',zoom:'Join on Zoom',more:'Session details',
+    egg:function(n){return '#'+n;},
+    eggTxt:function(d,b,p){return 'Hatched '+d+' / 10 · Presenters set: Book '+b+'/10 · Paper '+p+'/10';},
+    period:function(a,z,n){return a+' – '+z+' · '+n+' sessions';},
+    lcPast:'Past event',lcToday:'Happening today!',
+    lcLinks:{home:'LangCon 2026 home',program:'Talks & staff',history:'Past LangCons',faq:'FAQ'},
+    staff:'Staff: ',site:'Event page',video:'Talk videos',
+    discord:'Open Discord ↗',discordWait:'Check the Discord announcements channel'
+  };
+  function eggSVG(st){
+    var shell=st==='done'?'var(--cream)':'var(--panel)';
+    if(st==='skip') return '<svg viewBox="0 0 44 54" aria-hidden="true"><ellipse cx="22" cy="29" rx="18" ry="23" fill="none" stroke="var(--dash)" stroke-width="2.5" stroke-dasharray="5 4"/></svg>';
+    var chick=st==='done'?'<circle cx="22" cy="20" r="9" fill="#F2BD16" stroke="var(--line)" stroke-width="2.5"/><circle cx="25" cy="18" r="1.6" fill="var(--line)"/><path d="M29 20 l5 1 -5 2z" fill="#F2A97A" stroke="var(--line)" stroke-width="1.2"/>':'';
+    var body=st==='done'?'<path d="M4 30 Q4 50 22 51 Q40 50 40 30 L32 25 L27 31 L22 24 L17 31 L12 25 Z" fill="'+shell+'" stroke="var(--line)" stroke-width="2.5"/>':
+      '<ellipse cx="22" cy="29" rx="18" ry="23" fill="'+(st==='next'||st==='live'?'#F2BD16':shell)+'" stroke="var(--line)" stroke-width="2.5"/>';
+    return '<svg viewBox="0 0 44 54" aria-hidden="true">'+chick+body+'</svg>';
+  }
+  function slot(kind,name){
+    var k=kind==='book'?L10N.book:L10N.paper;
+    return name?'<span class="slot"><span class="k">'+k+'</span>'+esc(B.name(name))+'</span>':'<span class="slot open"><span class="k">'+k+'</span>'+L10N.open+'</span>';
+  }
+  B.onUpdate(function(){
+    var s=B.next(),box=document.getElementById('nextBox');
+    if(!s){box.innerHTML='<div class="card" style="padding:18px 22px">'+L10N.finished+'</div>';}
+    else{
+      var ch=s.chapters.map(function(n){return '<span class="chip">'+L10N.ch(n,esc(B.chapter(n).en))+'</span>';}).join(' ');
+      box.innerHTML='<article class="card nextcard"><div class="dd"><span>'+L10N.nth(s.no)+'</span><b>'+B.ddayText(s)+'</b><span>'+esc(B.fmtDate(s,true))+'</span></div>'+
+        '<div class="body"><div class="row">'+ch+(s.note?'<span class="chip" style="background:var(--pink);color:#fff">'+esc(s.note)+'</span>':'')+'</div>'+
+        '<h3>'+esc(B.tx(s,'title'))+'</h3><p class="en">'+esc(B.sub(s))+'</p>'+
+        '<div><b class="px" style="font-size:13px">'+L10N.range+'</b> '+esc(B.tx(s,'range'))+'</div>'+
+        '<div class="slots">'+slot('book',s.book)+slot('paper',s.paper)+'</div>'+
+        '<div><b class="px" style="font-size:13px">'+L10N.ref+'</b> <a href="'+esc(s.paperInfo.url)+'" target="_blank" rel="noopener">'+esc(s.paperInfo.short)+' ('+s.paperInfo.year+')</a></div>'+
+        '<div class="row"><a class="btn" href="'+esc(S.zoom.url)+'" target="_blank" rel="noopener">'+L10N.zoom+'</a><a class="btn ghost" href="'+esc(B.calUrl(s))+'" target="_blank" rel="noopener">'+L10N.cal+'</a><a class="btn ghost" href="schedule.html#s'+s.no+'">'+L10N.more+'</a></div></div></article>';
+    }
+    var eg=document.getElementById('eggs'),done=B.doneCount();
+    eg.innerHTML=S.sessions.map(function(x){var st=B.status(x);
+      return '<a class="egg '+st+'" href="schedule.html#s'+x.no+'" title="'+esc(B.tx(x,'title'))+'">'+eggSVG(st)+'<small>'+L10N.egg(x.no)+'<br>'+esc(B.fmtDate(x).split(' (')[0].split('（')[0])+'</small></a>';}).join('');
+    var f=B.filled();
+    document.getElementById('eggTxt').textContent=L10N.eggTxt(done,f.book,f.paper);
+    var a=S.sessions[0],z=S.sessions[S.sessions.length-1];
+    document.getElementById('periodDd').textContent=L10N.period(B.fmtYMD(a.date,true),B.fmtYMD(z.date,true),S.sessions.length);
+  });
+  /* Discord */
+  document.getElementById('discordRow').innerHTML=S.discord?'<a class="btn" href="'+esc(S.discord)+'" target="_blank" rel="noopener">'+L10N.discord+'</a>':'<span class="chip">'+L10N.discordWait+'</span>';
+  /* LangCon */
+  (function(){
+    var L=S.langcon;if(!L)return;
+    var $=function(id){return document.getElementById(id);};
+    $('lcName').textContent=L.name;$('lcTheme').textContent=B.tx(L,'theme');$('lcDate').textContent=B.fmtYMD(L.date,true)+' '+L.time;$('lcVenue').textContent=B.tx(L,'venue');$('lcSpon').textContent=L.sponsors;
+    var d=Math.round((new Date(L.date+'T00:00:00+09:00')-new Date(B.now().toISOString().slice(0,10)+'T00:00:00+09:00'))/86400e3);
+    $('lcState').textContent=d>0?'D-'+d:d===0?L10N.lcToday:L10N.lcPast;
+    $('lcLinks').innerHTML=L.links.map(function(l,i){return '<a class="btn'+(i?' ghost':'')+'" href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(L10N.lcLinks[l.key]||l.key)+'</a>';}).join('');
+    $('lcTalks').innerHTML=L.talks.map(function(t){return '<li><time>'+esc(t[0])+'</time><span>'+esc(t[1])+'<small>'+esc(B.name(t[2]))+' · '+esc(t[3])+'</small></span></li>';}).join('');
+    $('lcStaff').textContent=L10N.staff+L.staff;
+    $('lcHist').innerHTML=L.history.map(function(h){return '<div><b>'+h.year+'</b><a href="'+esc(h.site)+'" target="_blank" rel="noopener">'+L10N.site+'</a><a href="'+esc(h.video)+'" target="_blank" rel="noopener">'+L10N.video+'</a></div>';}).join('');
+  })();
+})();
+</script>
+</body>
+</html>

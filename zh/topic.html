@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh" data-base="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>推理工程主题导览</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="什么是推理工程、全书八章地图、令牌(token)生成实验、核心术语和十篇参考论文。">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&family=Jua&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/board.css">
+<style>
+:root{--display:"ZCOOL KuaiLe","Noto Sans SC","Jua",system-ui,sans-serif;--body:"Noto Sans SC","IBM Plex Sans KR",system-ui,sans-serif}
+h1,h2,h3,h4,p,li,dd{word-break:normal;line-break:strict}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:20px;align-items:end}
+.hero-grid img{width:100%;max-width:220px;justify-self:center;filter:drop-shadow(4px 5px 0 rgba(42,18,87,.25))}
+
+/* Training vs inference */
+.vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:stretch}
+.vs .card{padding:18px 20px}
+.vs .card h3{margin:0 0 4px;font-size:23px}
+.vs .card .px{font-size:12px;color:var(--muted)}
+.vs .card ul{margin:8px 0 0;padding-left:20px}
+.vs .mid{display:grid;place-items:center;font-family:var(--display);font-size:28px;color:var(--pink-ink)}
+.vs .infer{background:var(--yolk);color:var(--yolk-ink)}
+.vs .infer .px{color:var(--yolk-ink)}
+.tri{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+.tri div{border:3px dashed var(--line);border-radius:14px;padding:12px 16px}
+.tri b{font-family:var(--display);font-weight:400;font-size:20px;display:block}
+.tri span{font-size:14.5px;color:var(--muted)}
+
+/* Lab */
+.lab{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:0;overflow:hidden}
+.lab .ctl{padding:18px 20px;border-right:3px solid var(--line);background:var(--bg2);display:grid;gap:14px;align-content:start}
+.lab label{display:grid;gap:2px;font-size:14.5px}
+.lab label .v{font-family:var(--px);font-size:13px;color:var(--teal-ink)}
+.lab label small{color:var(--muted);font-size:12.5px;line-height:1.45}
+.lab input[type=range]{width:100%;accent-color:var(--pink)}
+.lab .out{padding:18px 20px;display:grid;gap:14px;min-width:0}
+.pipe{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 12px;align-items:center}
+.pipe img{width:46px}
+.bar{height:16px;border:2.5px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+.bar i{display:block;height:100%;width:0;background:var(--teal)}
+.bar.dec i{background:var(--pink)}
+.pipe .lb{grid-column:2;font-family:var(--px);font-size:12px;color:var(--muted);margin-top:-6px}
+.speech{min-height:84px;border:3px solid var(--line);border-radius:16px 16px 16px 4px;padding:10px 14px;background:var(--panel);font-size:15px;line-height:1.6}
+.speech .tk{background:var(--chip);color:var(--chip-ink);border-radius:5px;padding:0 2px;margin-right:2px}
+.speech .tk.new{background:var(--yolk);color:var(--yolk-ink)}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.metric{border:2.5px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--panel)}
+.metric b{display:block;font-family:var(--display);font-weight:400;font-size:24px;line-height:1.15;font-variant-numeric:tabular-nums}
+.metric span{font-size:12.5px;color:var(--muted);line-height:1.35;display:block}
+.chartbox{border:2.5px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--panel)}
+.chartbox h4{margin:0;font-size:16px}
+.chartbox p{margin:0;font-size:13px;color:var(--muted)}
+.chartbox svg{width:100%;height:auto;display:block}
+.chartbox text{font-family:var(--px);font-size:11px;fill:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin:0}
+
+/* Book map */
+.chmap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.chc{padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.chc .no{font-family:var(--display);font-size:38px;line-height:1;color:var(--pink-ink)}
+.chc h3{margin:0;font-size:20px}
+.chc h3 small{display:block;font-family:var(--body);font-size:13.5px;color:var(--muted)}
+.chc p{margin:0;font-size:14px}
+.chc ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--muted)}
+.chc .foot{margin-top:auto;display:flex;gap:6px;flex-wrap:wrap;padding-top:6px}
+.chc .foot a{font-family:var(--px);font-size:12px;text-decoration:none;background:var(--chip);color:var(--chip-ink);border-radius:999px;padding:1px 9px}
+
+/* Glossary */
+.gloss-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.gloss-tools input{font:inherit;font-size:16px;color:var(--ink);background:var(--panel);border:3px solid var(--line);border-radius:999px;padding:6px 16px;min-width:0;flex:1;max-width:420px}
+.gloss{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:980px){.gloss{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.gloss{grid-template-columns:minmax(0,1fr)}}
+.term{padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.term h3{margin:0;font-size:19px}
+.term h3 small{font-family:var(--px);font-size:11.5px;color:var(--muted);margin-left:6px}
+.term p{margin:0;font-size:14.5px}
+.term .chick{font-size:13.5px;color:var(--muted);border-top:2px dashed var(--dash);padding-top:6px}
+.term .chick b{font-family:var(--px);font-size:11.5px;color:#B07A00}
+:root[data-theme="dark"] .term .chick b{color:var(--yolk)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .term .chick b{color:var(--yolk)}}
+.term .foot a{font-family:var(--px);font-size:11.5px}
+
+/* Papers */
+.shelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.paper{padding:14px 18px;display:grid;grid-template-columns:54px minmax(0,1fr);gap:12px;align-items:start}
+.paper .yr{font-family:var(--px);font-size:12px;text-align:center;background:var(--band);color:#FFF4CF;border-radius:8px;padding:6px 0;line-height:1.3}
+.paper .yr b{display:block;font-family:var(--display);font-weight:400;font-size:20px;color:var(--yolk)}
+.paper h3{margin:0;font-size:18px}
+.paper .t{margin:0;font-size:13.5px;color:var(--muted);overflow-wrap:anywhere}
+.paper .why{margin:6px 0 0;font-size:14.5px}
+.vids{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.vids li{border:2.5px solid var(--line);border-radius:12px;padding:8px 14px;background:var(--panel)}
+.vids small{font-family:var(--px);color:var(--muted);font-size:11.5px;display:block}
+
+@media (max-width:980px){.chmap{grid-template-columns:repeat(2,minmax(0,1fr))}.lab{grid-template-columns:minmax(0,1fr)}.lab .ctl{border-right:0;border-bottom:3px solid var(--line)}}
+@media (max-width:700px){
+  .hero-grid{grid-template-columns:minmax(0,1fr)}.hero-grid img{max-width:150px}
+  .vs{grid-template-columns:minmax(0,1fr)}.vs .mid{font-size:22px}
+  .tri{grid-template-columns:minmax(0,1fr)}
+  .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chmap,.shelf{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="ticker" role="status"><span class="lamp" aria-hidden="true"></span><div class="run"><span id="tickerText">Inference Korea · 每周六晚 8 点 · Zoom</span></div></div>
+  <div class="navbar"><div class="wrap">
+    <a class="brand" href="index.html"><img src="../assets/img/chick-core.webp" alt=""><span>Inference Korea <small>小鸡推理研究所</small></span></a>
+    <nav class="nav" aria-label="学习看板">
+      <a href="index.html"><span class="n">01</span>简报</a>
+      <a href="schedule.html"><span class="n">02</span>日程表</a>
+      <a href="topic.html"><span class="n">03</span>主题导览</a>
+      <a href="guide.html"><span class="n">04</span>学习指南</a>
+    </nav>
+  </div></div>
+</div>
+
+<header class="hero page-hero">
+  <div class="stripes" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="kicker">TOPIC · 啾啾核心带路</span>
+      <h1>推理工程是什么？</h1>
+      <p class="lede">如果说<b>打造</b>模型是训练，那么让做好的模型<b>又快、又省、又准</b>地回答人们的请求，就是推理工程。挑选 GPU、配置推理引擎、量化与缓存、部署与自动扩缩容，都属于这里。</p>
+    </div>
+    <img src="../assets/img/chick-core.webp" alt="胸前有电路爱心的大小鸡啾啾核心">
+  </div>
+</header>
+
+<main>
+<section aria-labelledby="vs-h"><div class="wrap">
+  <div class="sec-h"><h2 id="vs-h">训练与推理</h2><span class="tag">第0章 · 第1次</span></div>
+  <p class="sub">同一个模型，做的事却不同。训练偶尔进行，一次做一件大事。推理则在服务运行期间，每来一个请求就发生一次。</p>
+  <div class="vs">
+    <div class="card"><span class="px">TRAINING</span><h3>训练：小鸡学校</h3><ul><li>看着数据造出权重（模型的知识）</li><li>做几次为期数周的大任务</li><li>重点是学得好不好（质量）</li></ul></div>
+    <div class="mid" aria-hidden="true">→</div>
+    <div class="card infer"><span class="px">INFERENCE</span><h3>推理：实战中啾啾叫</h3><ul><li>用固定的权重为每个输入生成回答</li><li>每来一个请求，同时服务许多人</li><li>有多快、有多省、有多准</li></ul></div>
+  </div>
+  <div class="tri">
+    <div><b>速度</b><span>第一个令牌何时出现（TTFT），之后接得有多快（每秒令牌数）</span></div>
+    <div><b>成本</b><span>一张 GPU 能接待多少客人（吞吐量），有没有闲着的 GPU</span></div>
+    <div><b>质量</b><span>为了提速而降低的精度和走的捷径，有没有毁掉回答</span></div>
+  </div>
+  <p class="note" style="margin-top:12px">这正是本书第1章的出发点。三者不可能同时做到最好，所以要先定下适合自己服务的平衡点。</p>
+</div></section>
+
+<section aria-labelledby="lab-h"><div class="wrap">
+  <div class="sec-h"><h2 id="lab-h">啾啾核心实验室</h2><span class="tag">PREFILL · DECODE · BATCH</span></div>
+  <p class="sub">小预把客人的问题一口吞下（预填充），小解一粒一粒地回答（解码）。同时接待的客人越多，对整张 GPU 越划算，但每位客人要等的时间会变长。拖动滑块，再按“开始啾啾”试试看。</p>
+  <div class="card lab">
+    <div class="ctl">
+      <label for="inTok">问题长度（输入令牌） <span class="v" id="inTokV"></span><input id="inTok" type="range" min="100" max="8000" step="100" value="1000"><small>越长，小预吞下去越久 → 第一个令牌越晚出现</small></label>
+      <label for="outTok">回答长度（输出令牌） <span class="v" id="outTokV"></span><input id="outTok" type="range" min="20" max="1000" step="10" value="300"><small>小解一次只出一个令牌。越长，总时间越长</small></label>
+      <label for="batch">同时接待的客人数（批大小） <span class="v" id="batchV"></span><input id="batch" type="range" min="1" max="64" step="1" value="8"><small>一起处理能提高 GPU 吞吐量，但每一步会慢一点</small></label>
+      <button class="btn" type="button" id="play">▶ 开始啾啾</button>
+    </div>
+    <div class="out">
+      <div class="pipe">
+        <img src="../assets/img/chick-pre.webp" alt="小预"><div class="bar" aria-hidden="true"><i id="pBar"></i></div><span class="lb">预填充：一次处理整个问题（计算密集）</span>
+        <img src="../assets/img/chick-deco.webp" alt="小解"><div class="bar dec" aria-hidden="true"><i id="dBar"></i></div><span class="lb">解码：一次生成一个令牌（每步都要从内存读取权重和 KV 缓存）</span>
+      </div>
+      <div class="speech" id="speech" aria-live="polite"><span style="color:var(--muted)">按下“开始啾啾”，啾啾核心就会开始回答。</span></div>
+      <div class="metrics">
+        <div class="metric"><b id="mTtft">–</b><span>首个令牌时间 (TTFT)</span></div>
+        <div class="metric"><b id="mItl">–</b><span>令牌间隔</span></div>
+        <div class="metric"><b id="mTot">–</b><span>一位客人的总耗时</span></div>
+        <div class="metric"><b id="mThr">–</b><span>GPU 总吞吐量（令牌/秒）</span></div>
+      </div>
+      <div class="chartbox">
+        <h4>客人变多会怎样？</h4>
+        <p><span style="color:var(--pink-ink)">●</span> 总吞吐量（左轴） <span style="color:var(--teal-ink);margin-left:8px">●</span> 单人总耗时（右轴） · 竖线为当前批大小</p>
+        <svg id="chart" viewBox="0 0 520 210" role="img" aria-label="按批大小显示吞吐量与延迟的图表"></svg>
+      </div>
+      <p class="note">这是用于讲解的简化模型。数值来自简化的计算，与真实的 GPU、模型和引擎不同。请看<b>形状</b>而不是数字：批越大，吞吐量涨得越多，而每个人的等待时间只是慢慢增加。详细计算会在第2次（2.2）、第3次（2.4）和第9次（批处理与自动扩缩容）中讲解。</p>
+    </div>
+  </div>
+</div></section>
+
+<section aria-labelledby="map-h"><div class="wrap">
+  <div class="sec-h"><h2 id="map-h">全书地图</h2><span class="tag">第0章 ~ 第7章</span></div>
+  <p class="sub">八章内容分 10 次读完。点击每章下方的场次，可跳转到日程表。</p>
+  <div class="chmap" id="chmap"></div>
+</div></section>
+
+<section aria-labelledby="g-h"><div class="wrap">
+  <div class="sec-h"><h2 id="g-h">术语卡片</h2><span class="tag">助手从博士那里领来的一叠</span></div>
+  <p class="sub">初次见面容易混淆的词。书末附录 A（Inference Glossary）里还有更多术语。</p>
+  <div class="gloss-tools"><input id="q" type="search" placeholder="查找术语（如：缓存、TTFT、量化）" aria-label="查找术语"><span class="px" style="font-size:13px;color:var(--muted)" id="qn"></span></div>
+  <div class="gloss" id="gloss"></div>
+</div></section>
+
+<section aria-labelledby="p-h"><div class="wrap">
+  <div class="sec-h"><h2 id="p-h">十篇参考论文</h2><span class="tag">论文报告用</span></div>
+  <p class="sub">每次一篇。从经典老论文（Roofline、Transformer），到当今推理引擎的基础（PagedAttention、SGLang、Orca），再到评估与安全论文。</p>
+  <div class="shelf" id="shelf"></div>
+  <h3 style="font-size:22px;margin:30px 0 10px">补充视频</h3>
+  <ul class="vids" id="vids"></ul>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p>教材：<a href="https://www.baseten.co/inference-engineering/" target="_blank" rel="noopener">Kiely, P. (2026). Inference engineering. Baseten Books.</a> 章节标题与小节名称沿用教材在线版。比喻和实验室数值均为本看板为讲解而制作。</p>
+  <p><span class="sync" data-sync></span></p>
+  <p class="credit" data-credit>页面制作 Reon Ahn (Ahn, Sang-Sun) · 联系 sangsun.ahn@m-robo.com · 主页 <a href="https://www.ahnboat.xyz" target="_blank" rel="noopener">www.ahnboat.xyz</a></p>
+</div></footer>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/board.js"></script>
+<script>
+(function(){
+  var B=window.Board,S=B.S,esc=B.esc;
+
+  /* ---------- Lab (illustrative model) ---------- */
+  var $=function(id){return document.getElementById(id);};
+  function model(inp,out,b){
+    var prefill=25+inp*b/40;                       // ms, compute ∝ input tokens × customers
+    var step=18+0.4*b+0.00025*b*(inp+out/2);       // ms, weight reads + batch overhead + KV cache reads
+    var total=prefill+out*step;
+    return {ttft:prefill,step:step,total:total,thr:b*out/(total/1000)};
+  }
+  function fmtMs(ms){return ms<1000?Math.round(ms)+'ms':(ms/1000).toFixed(ms<10000?2:1)+'s';}
+  function readUI(){
+    var i=+$('inTok').value,o=+$('outTok').value,b=+$('batch').value;
+    $('inTokV').textContent=i.toLocaleString('zh-CN')+' 令牌';$('outTokV').textContent=o.toLocaleString('zh-CN')+' 令牌';$('batchV').textContent=b+' 位';
+    return {i:i,o:o,b:b};
+  }
+  function showMetrics(){
+    var u=readUI(),m=model(u.i,u.o,u.b);
+    $('mTtft').textContent=fmtMs(m.ttft);$('mItl').textContent=fmtMs(m.step);$('mTot').textContent=fmtMs(m.total);$('mThr').textContent=Math.round(m.thr).toLocaleString('zh-CN');
+    drawChart(u);
+  }
+  function drawChart(u){
+    var W=520,H=210,L=52,R=52,T=12,Bt=34,xs=[],i;
+    for(i=1;i<=64;i++)xs.push(i);
+    var thr=xs.map(function(b){return model(u.i,u.o,b).thr;}),lat=xs.map(function(b){return model(u.i,u.o,b).total/1000;});
+    function nice(v){var p=Math.pow(10,Math.floor(Math.log10(v))),n=v/p;return (n<=1?1:n<=2?2:n<=5?5:10)*p;}
+    var tMax=nice(Math.max.apply(null,thr)),lMax=nice(Math.max.apply(null,lat));
+    var X=function(b){return L+(b-1)/63*(W-L-R);},Yt=function(v){return T+(1-v/tMax)*(H-T-Bt);},Yl=function(v){return T+(1-v/lMax)*(H-T-Bt);};
+    var g='';
+    for(i=0;i<=4;i++){var y=T+i/4*(H-T-Bt);g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'" stroke="var(--dash)" stroke-width="1" opacity=".6"/>'+
+      '<text x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+Math.round(tMax*(1-i/4)).toLocaleString('zh-CN')+'</text>'+
+      '<text x="'+(W-R+6)+'" y="'+(y+4)+'">'+(function(v){return Number.isInteger(v)?v:v.toFixed(1);})(lMax*(1-i/4))+'s</text>';}
+    [1,16,32,48,64].forEach(function(b){g+='<text x="'+X(b)+'" y="'+(H-Bt+16)+'" text-anchor="middle">'+b+'</text>';});
+    g+='<text x="'+((L+W-R)/2)+'" y="'+(H-4)+'" text-anchor="middle">同时接待的客人数</text>';
+    var pt=xs.map(function(b,k){return X(b)+','+Yt(thr[k]);}).join(' '),pl=xs.map(function(b,k){return X(b)+','+Yl(lat[k]);}).join(' ');
+    g+='<polygon points="'+X(1)+','+(H-Bt)+' '+pt+' '+X(64)+','+(H-Bt)+'" fill="var(--pink)" opacity=".12"/>';
+    g+='<polyline points="'+pt+'" fill="none" stroke="var(--pink)" stroke-width="3"/>';
+    g+='<polyline points="'+pl+'" fill="none" stroke="var(--teal)" stroke-width="3" stroke-dasharray="7 5"/>';
+    var cx=X(u.b);
+    g+='<line x1="'+cx+'" x2="'+cx+'" y1="'+T+'" y2="'+(H-Bt)+'" stroke="var(--line)" stroke-width="2"/>';
+    g+='<circle cx="'+cx+'" cy="'+Yt(thr[u.b-1])+'" r="5.5" fill="var(--pink)" stroke="var(--line)" stroke-width="2"/>';
+    g+='<circle cx="'+cx+'" cy="'+Yl(lat[u.b-1])+'" r="5.5" fill="var(--teal)" stroke="var(--line)" stroke-width="2"/>';
+    $('chart').innerHTML=g;
+  }
+  var WORDS='推理 就是 用训练好的 模型 为每个请求 生成回答。 要同时 兼顾 快、 省、 准 这三件事。 问题 一长， 第一个令牌 就来得晚； 回答 一长， 结束时间 就推迟。 同时接待 很多客人， GPU 会很忙， 但每一位 都要 多等 一会儿。 所以 我们 用缓存、 降精度、 把活儿 分开做。 啾！'.split(' ');
+  var timer=null;
+  function play(){
+    clearTimeout(timer);
+    var u=readUI(),m=model(u.i,u.o,u.b),sp=$('speech'),pb=$('pBar'),db=$('dBar');
+    var show=Math.min(u.o,40),scale=Math.min(1,2200/m.ttft); // compress time for on-screen display
+    pb.style.transition='none';db.style.transition='none';pb.style.width='0';db.style.width='0';
+    sp.innerHTML='<span style="color:var(--muted)">小预正在吞下 '+u.i.toLocaleString('zh-CN')+' 个令牌的问题…</span>';
+    $('play').disabled=true;
+    setTimeout(function(){
+      var pt=Math.max(300,m.ttft*scale);
+      pb.style.transition='width '+pt+'ms linear';pb.style.width='100%';
+      timer=setTimeout(function(){
+        sp.innerHTML='';var k=0,gap=Math.max(45,Math.min(260,m.step*3));
+        (function next(){
+          var old=sp.querySelector('.new');if(old)old.classList.remove('new');
+          if(k<show){
+            var s=document.createElement('span');s.className='tk new';s.textContent=WORDS[k%WORDS.length];sp.appendChild(s);sp.appendChild(document.createTextNode(' '));
+            k++;db.style.transition='width '+gap+'ms linear';db.style.width=(k/show*100)+'%';timer=setTimeout(next,gap);
+          }else{
+            if(u.o>show){var e=document.createElement('span');e.style.color='var(--muted)';e.textContent='…（以下省略 '+(u.o-show)+' 个令牌）';sp.appendChild(e);}
+            $('play').disabled=false;
+          }
+        })();
+      },pt);
+    },30);
+  }
+  ['inTok','outTok','batch'].forEach(function(id){$(id).addEventListener('input',showMetrics);});
+  $('play').addEventListener('click',play);
+  showMetrics();
+
+  /* ---------- Book map ---------- */
+  var CH_DESC={0:'推理是什么、为什么现在变得重要：贯穿全书的问题意识。',1:'优化之前先定义“最好”：应用的性质、模型选择、延迟与吞吐量的测量。',2:'LLM 一个一个地生成令牌，图像模型则通过去除噪声来生成。瓶颈计算与注意力优化。',3:'推理跑在加速器上。GPU 架构与代际、实例、其他加速器、本地推理。',4:'软件比硬件变得更快。从 CUDA 到推理引擎、Dynamo、基准测试与负载测试。',5:'速度靠层层叠加技术获得：量化、推测解码、缓存、并行化、阶段分离。',6:'超越文本：视觉-语言、嵌入、语音识别与合成、图像与视频生成。',7:'在真实规模下运行的问题：容器、自动扩缩容、多云、测试与部署、客户端代码。'};
+  $('chmap').innerHTML=S.chapters.map(function(c){
+    var ss=S.sessions.filter(function(s){return s.chapters.indexOf(c.no)>=0;});
+    return '<article class="card chc"><span class="no">'+c.no+'</span><h3>'+esc(c.en)+'<small>'+esc(B.chName(c))+'</small></h3><p>'+esc(CH_DESC[c.no])+'</p>'+
+      (c.sections.length?'<ul>'+c.sections.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':'')+
+      '<div class="foot">'+ss.map(function(s){return '<a href="schedule.html#s'+s.no+'">第'+s.no+'次 · '+B.fmtDate(s).split(' (')[0].split('（')[0]+'</a>';}).join('')+'<a href="'+esc(c.url)+'" target="_blank" rel="noopener">原文 ↗</a></div></article>';
+  }).join('');
+
+  /* ---------- Glossary ---------- */
+  var G=[
+    ['推理','Inference','向训练好的模型输入数据并得到输出。服务的大部分成本都花在这里。','从学校毕业的小鸡在实战中啾啾叫。',[1]],
+    ['延迟','Latency','从发出请求到收到响应所需的时间。分为首个令牌时间和总时间来看。','客人等待回答的时间。',[1]],
+    ['吞吐量','Throughput','单位时间内处理的量。用每秒令牌数或每秒请求数来衡量。','啾啾核心 1 秒内能发出的所有啾啾声的总和。',[1,9]],
+    ['TTFT','Time to First Token','请求发出后到第一个令牌出现的时间，主要由预填充阶段决定。它左右着聊天时“反应快不快”的感受。','从小预把问题全部吞下，到小解发出第一声。',[1,2]],
+    ['令牌(token)','Token','模型读写的基本单位片段。一个词有时会被拆成多个令牌。','啾啾核心一次吃下的一粒饲料(谷粒)。',[2]],
+    ['预填充','Prefill','一次性处理全部输入令牌的阶段。计算量大，容易受限于算力。','小预一口把问题吞下。',[2]],
+    ['解码','Decode','逐个生成输出令牌的阶段。每一步都要读取权重，容易受限于内存带宽。','小解一粒一粒地啾啾。',[2]],
+    ['KV 缓存','KV Cache','保存并复用之前已计算令牌的 Key 和 Value 的内存。省去重复计算，但占用大量内存。','小解记下刚才说过的话的小本子。',[2,5,7]],
+    ['注意力','Attention','计算每个令牌应参考前面哪些令牌、参考多少的运算。上下文越长，成本越高。','啾啾之前先挑出要看小本子的哪几行。',[2,3]],
+    ['内存带宽','Memory Bandwidth','把数据从内存搬到计算单元的速度。常常决定解码速度。','从饲料仓库通到小嘴的管道有多粗。',[3,4]],
+    ['屋顶线 / 算术强度','Roofline / Arithmetic Intensity','用每搬运一个字节做多少次运算，来判断任务是受限于计算还是受限于内存的图。','帮你分清是小嘴太慢，还是管道太窄的图表。',[3,4]],
+    ['推理引擎','Inference Engine','接收模型并高效处理请求的软件，如 vLLM、SGLang、TensorRT-LLM 等。','驱动啾啾核心心脏的引擎。',[5]],
+    ['量化','Quantization','用更少的比特（如 16 位 → 8 位、4 位）表示权重和激活值，以节省内存和时间的技术。需要同时检查质量是否下降。','把饲料颗粒磨得更细，让管道一次多送一些。',[6]],
+    ['推测解码','Speculative Decoding','先用快速的方法猜出几个令牌，再由大模型一次性检查，接受其中猜对的部分。','小工先小声说出下一句，啾啾核心说声“对”就直接用上。',[6]],
+    ['前缀缓存','Prefix Caching','多个请求共享相同的开头（如系统提示词）时，复用这一部分 KV 缓存的技术。','每次都说的问候语，直接从小本子里拿出来用。',[7]],
+    ['模型并行','Model Parallelism','把一个模型拆分到多张 GPU 上的方法，包括张量并行、流水线并行、专家并行等。','让一只大小鸡分坐在好几个窝里。',[7]],
+    ['阶段分离','Disaggregation','把预填充和解码放到不同的 GPU 组上处理，分别按各自需要调节的方式。','给小预和小解各安排一个房间。',[7]],
+    ['模态','Modality','模型接收和输出的数据类型，如文本、图像、语音、视频等。','不吃饲料、改吃图画或声音的小鸡。',[8]],
+    ['连续批处理','Continuous Batching','不等整批请求全部结束，而是某个请求一结束就立刻插入新请求的方式。基于 Orca 论文提出的迭代级调度。','吃完的小鸡一离座，下一只小鸡马上坐上去。',[9]],
+    ['自动扩缩容 · 冷启动','Autoscaling · Cold Start','根据请求量增减 GPU 副本数。新副本加载模型所需的时间就是冷启动。','客人一多就多搭几个窝，可新窝要花时间暖起来。',[9]],
+    ['提示注入','Prompt Injection','在智能体读取的文档或网页中藏入指令，试图改变模型行为的攻击。当文本会转化为行动时尤其危险。','在饲料袋上写“别听主人的话”的恶作剧。',[10]]
+  ];
+  function drawGloss(){
+    var q=($('q').value||'').trim().toLowerCase(),n=0;
+    $('gloss').innerHTML=G.filter(function(t){return !q||t.slice(0,4).join(' ').toLowerCase().indexOf(q)>=0;}).map(function(t){n++;
+      return '<article class="card term"><h3>'+esc(t[0])+'<small>'+esc(t[1])+'</small></h3><p>'+esc(t[2])+'</p><p class="chick"><b>小鸡的话</b> '+esc(t[3])+'</p><div class="foot">'+t[4].map(function(no){return '<a href="schedule.html#s'+no+'">第'+no+'次</a>';}).join(' · ')+'</div></article>';}).join('')||'<div class="card" style="padding:16px">没有找到该术语。请查看教材附录 A。</div>';
+    $('qn').textContent=n+' / '+G.length+' 个';
+  }
+  $('q').addEventListener('input',drawGloss);drawGloss();
+
+  /* ---------- Papers and videos ---------- */
+  var WHY={1:'选模型时该如何衡量“质量”？为减少训练数据污染而不断出新题的基准测试。',
+    2:'首次提出 Transformer 与注意力的论文，它是当今 LLM 的骨架。预填充和解码为何不同，就从这里说起。',
+    3:'按 GPU 内存层级重写注意力计算，结果保持不变，却减少了内存搬运。“瓶颈在内存”的代表性案例。',
+    4:'把计算性能和内存带宽放在同一张图上，显示程序卡在哪一层“屋顶”的经典模型。',
+    5:'像操作系统的分页一样把 KV 缓存切块管理，减少内存浪费。vLLM 推理引擎的基础。',
+    6:'说明同一道题只改数字，正确率也会波动的评估论文。促使我们思考量化或推测解码之后该如何检查质量。',
+    7:'让多次调用的 LLM 程序高效运行的框架。核心是前缀缓存复用（RadixAttention）。',
+    8:'把图像编码器与语言模型连接起来、使其能遵循视觉指令的视觉-语言模型。可以看到图像令牌如何增加推理成本。',
+    9:'提出以每一步令牌生成而非每个请求为单位进行调度的思路。连续批处理的起点。',
+    10:'衡量使用工具的 LLM 智能体对提示注入有多强抵抗力的环境。运营“From Text to Action”时的安全问题。'};
+  $('shelf').innerHTML=S.sessions.map(function(s){var p=s.paperInfo;
+    return '<article class="card paper"><div class="yr">第'+s.no+'次<b>'+String(p.year).slice(2)+'</b>\''+'</div><div><h3><a href="'+esc(p.url)+'" target="_blank" rel="noopener">'+esc(p.short)+'</a></h3><p class="t">'+esc(p.title)+' ('+p.year+')</p><p class="why">'+esc(WHY[s.no]||'')+'</p><p class="t" style="margin-top:6px">论文报告：'+(s.paper?esc(B.name(s.paper)):'<b style="color:var(--pink-ink)">招募中</b>')+'</p></div></article>';}).join('');
+  var seen={},vids=[];
+  S.sessions.forEach(function(s){if(!s.video)return;var k=s.video.url;if(!seen[k]){seen[k]={v:s.video,no:[]};vids.push(seen[k]);}seen[k].no.push(s.no);});
+  $('vids').innerHTML=vids.map(function(x){return '<li><small>第'+x.no.join('·')+'次</small><a href="'+esc(x.v.url)+'" target="_blank" rel="noopener">'+esc(x.v.title.replace(' (Review)',''))+'</a></li>';}).join('');
+  B.onUpdate(function(){
+    $('shelf').querySelectorAll('.paper').forEach(function(el,i){var s=S.sessions[i],t=el.querySelectorAll('.t')[1];if(t)t.innerHTML='论文报告：'+(s.paper?esc(B.name(s.paper)):'<b style="color:var(--pink-ink)">招募中</b>');});
+  });
+})();
+</script>
+</body>
+</html>

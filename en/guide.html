@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" data-base="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inference Korea Study Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="How the study runs, how to prepare book and paper presentations, open presenter seats and how to sign up, and how the board updates.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/board.css">
+<style>
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:20px;align-items:end}
+.hero-grid img{width:100%;max-width:170px;image-rendering:pixelated;justify-self:center}
+
+/* meeting flow */
+.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:f}
+.step{position:relative;padding:14px 14px 14px 16px;border:3px solid var(--line);border-right:0;background:var(--panel)}
+.step:first-child{border-radius:var(--r) 0 0 var(--r)}
+.step:last-child{border-right:3px solid var(--line);border-radius:0 var(--r) var(--r) 0}
+.step .t{font-family:var(--px);font-size:12px;color:var(--muted)}
+.step h3{margin:2px 0 4px;font-size:19px}
+.step p{margin:0;font-size:14px;color:var(--muted);line-height:1.55}
+.step.hl{background:var(--yolk);color:var(--yolk-ink)}
+.step.hl p,.step.hl .t{color:var(--yolk-ink)}
+.flow-wrap{box-shadow:5px 5px 0 var(--shadow);border-radius:var(--r)}
+
+/* checklists */
+.prep{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.prep .card{padding:18px 20px}
+.prep h3{margin:0;font-size:23px;display:flex;align-items:center;gap:10px}
+.prep h3 img{width:40px}
+.prep .meter{font-family:var(--px);font-size:12.5px;color:var(--muted);margin:2px 0 10px}
+.check{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.check label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;cursor:pointer;font-size:15px}
+.check input{width:20px;height:20px;margin-top:3px;accent-color:var(--pink)}
+.check input:checked + span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--pink)}
+.check small{display:block;color:var(--muted);font-size:13px}
+.reset{font:inherit;font-family:var(--px);font-size:12px;background:none;border:0;color:var(--teal-ink);text-decoration:underline;cursor:pointer;padding:0;margin-top:10px}
+
+.prompt{margin-top:20px;padding:16px 20px}
+.prompt pre{margin:10px 0 0;white-space:pre-wrap;word-break:break-word;font-family:var(--px);font-size:13px;line-height:1.7;background:var(--bg2);border:2px dashed var(--dash);border-radius:12px;padding:12px 14px;max-height:340px;overflow:auto}
+.prompt .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.prompt select{max-width:100%;font:inherit;font-size:15px;color:var(--ink);background:var(--panel);border:2.5px solid var(--line);border-radius:999px;padding:3px 12px}
+
+/* open seats */
+.open-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.seat{padding:12px 14px;border:3px dashed var(--line);border-radius:16px;background:var(--yolk);color:var(--yolk-ink);display:grid;gap:2px;text-decoration:none}
+.seat .k{font-family:var(--px);font-size:12px}
+.seat b{font-family:var(--display);font-weight:400;font-size:19px;line-height:1.3}
+.seat span{font-size:13.5px}
+.how{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;margin-top:22px}
+.how .card{padding:18px 20px}
+.how ol{margin:6px 0 0;padding-left:22px;display:grid;gap:6px}
+code,kbd{font-family:var(--px);font-size:.88em;background:var(--chip);color:var(--chip-ink);border-radius:5px;padding:0 5px}
+
+/* rules · FAQ */
+.rules{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.rules .card{padding:14px 16px}
+.rules h3{margin:0 0 4px;font-size:19px}
+.rules p{margin:0;font-size:14.5px;color:var(--muted)}
+.faq{display:grid;gap:10px;max-width:860px}
+.faq details{background:var(--panel);border:3px solid var(--line);border-radius:14px;padding:10px 16px}
+.faq summary{cursor:pointer;font-family:var(--display);font-size:18px}
+.faq p{margin:8px 0 2px;font-size:15px}
+
+/* admin */
+.admin{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.admin .card{padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.admin h3{margin:0;font-size:20px}
+.admin p{margin:0;font-size:14.5px}
+.admin pre{margin:0;font-family:var(--px);font-size:12px;line-height:1.6;background:var(--bg2);border-radius:10px;padding:10px 12px;overflow-x:auto;white-space:pre}
+.tester{display:grid;gap:6px;grid-template-columns:minmax(0,1fr);min-width:0}
+.tester input{font:inherit;font-size:15px;color:var(--ink);background:var(--panel);border:2.5px solid var(--line);border-radius:10px;padding:5px 10px;min-width:0;width:100%}
+.tester output{font-family:var(--px);font-size:12.5px}
+.tester textarea{font-family:var(--px);font-size:12px;color:var(--ink);background:var(--bg2);border:2.5px solid var(--line);border-radius:10px;padding:8px 10px;width:100%;min-width:0;resize:vertical}
+.tester input[type=file]{font-size:13px;max-width:100%}
+.steps{margin:0;padding-left:22px;display:grid;gap:6px;font-size:14.5px}
+.coltable{overflow-x:auto}
+.coltable table{border-collapse:collapse;font-size:13.5px;width:100%}
+.coltable th{font-family:var(--px);font-size:12px;font-weight:400;color:var(--muted);text-align:left;padding:4px 8px 4px 0;vertical-align:top;white-space:nowrap}
+.coltable td{padding:4px 0;border-bottom:1.5px dashed var(--dash)}
+.pv{border-collapse:collapse;font-size:12.5px;width:100%;margin-top:6px}
+.pv th,.pv td{border-bottom:1.5px solid var(--dash);padding:3px 6px;text-align:left;white-space:nowrap}
+.pvwrap{overflow-x:auto;max-width:100%}
+.warnl{color:var(--pink-ink)}
+.say-inline{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:end;margin-bottom:18px;max-width:860px}
+.say-inline img{width:64px;image-rendering:pixelated}
+.say-inline .bub{background:var(--panel);border:3px solid var(--line);border-radius:16px 16px 16px 4px;padding:8px 14px;font-size:15px}
+.say-inline .who{font-family:var(--px);font-size:12.5px;color:var(--pink-ink);display:block}
+
+@media (max-width:980px){.flow{grid-template-columns:minmax(0,1fr)}.step,.step:first-child,.step:last-child{border-right:3px solid var(--line);border-bottom:0;border-radius:0}.step:first-child{border-radius:var(--r) var(--r) 0 0}.step:last-child{border-bottom:3px solid var(--line);border-radius:0 0 var(--r) var(--r)}
+  .rules{grid-template-columns:repeat(2,minmax(0,1fr))}.admin{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:700px){.hero-grid{grid-template-columns:minmax(0,1fr)}.hero-grid img{max-width:110px}.prep,.how,.rules{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="ticker" role="status"><span class="lamp" aria-hidden="true"></span><div class="run"><span id="tickerText">Inference Korea · Every Saturday 8 PM · Zoom</span></div></div>
+  <div class="navbar"><div class="wrap">
+    <a class="brand" href="index.html"><img src="../assets/img/chick-core.webp" alt=""><span>Inference Korea <small>Chick Inference Lab</small></span></a>
+    <nav class="nav" aria-label="Study board">
+      <a href="index.html"><span class="n">01</span>Briefing</a>
+      <a href="schedule.html"><span class="n">02</span>Schedule</a>
+      <a href="topic.html"><span class="n">03</span>Topic Guide</a>
+      <a href="guide.html"><span class="n">04</span>Study Guide</a>
+    </nav>
+  </div></div>
+</div>
+
+<header class="hero page-hero">
+  <div class="stripes" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="kicker">GUIDE · Copied from the Professor's notes by the Assistant</span>
+      <h1>Study Guide</h1>
+      <p class="lede">How a meeting runs, what to prepare for a presentation, and which presenter seats are still open, all in one place. At the very bottom there are notes for whoever maintains the board.</p>
+    </div>
+    <img src="../assets/img/assistant.webp" alt="Assistant">
+  </div>
+</header>
+
+<main>
+<section aria-labelledby="flow-h"><div class="wrap">
+  <div class="sec-h"><h2 id="flow-h">How a meeting goes</h2><span class="tag">Sat 20:00 weekly · sample order</span></div>
+  <p class="sub">Each session has one book presenter and one paper presenter. The Study Leader adjusts the timing to fit that week's material.</p>
+  <div class="flow-wrap"><div class="flow">
+    <div class="step"><span class="t">Opening</span><h3>Hello · notices</h3><p>A quick look at leftover questions from last week and today's order.</p></div>
+    <div class="step hl"><span class="t">Book presentation</span><h3>This week's chapters</h3><p>The presenter walks through the key claims, figures and calculations in their own words.</p></div>
+    <div class="step hl"><span class="t">Paper presentation</span><h3>One paper</h3><p>The problem, the idea, the experiments, and how it connects to this week's reading.</p></div>
+    <div class="step"><span class="t">Together</span><h3>Questions &amp; discussion</h3><p>We start from the presenters' questions and share our own hands-on experience.</p></div>
+    <div class="step"><span class="t">Closing</span><h3>Next week</h3><p>Confirm the next range and presenters, and fill any open seats.</p></div>
+  </div></div>
+</div></section>
+
+<section aria-labelledby="prep-h"><div class="wrap">
+  <div class="sec-h"><h2 id="prep-h">Presentation prep checklist</h2><span class="tag">Checks are saved on this device only</span></div>
+  <div class="say-inline"><img src="../assets/img/assistant.webp" alt=""><div class="bub"><span class="who">Assistant</span>The Professor always says: "You don't present because you fully understand it. You understand it by presenting." Just cover the items below and you're set!</div></div>
+  <div class="prep">
+    <div class="card" data-list="book">
+      <h3><img src="../assets/img/chick-pre.webp" alt="">Book presentation</h3>
+      <p class="meter" data-meter></p>
+      <ul class="check">
+        <li><label><input type="checkbox" id="b1"><span>Read your sections all the way through and pick out three key claims</span></label></li>
+        <li><label><input type="checkbox" id="b2"><span>List unfamiliar terms<small>The <a href="topic.html#g-h">glossary cards</a> plus the book's Appendix A make this quick</small></span></label></li>
+        <li><label><input type="checkbox" id="b3"><span>Pick one figure or table and explain it again in your own words</span></label></li>
+        <li><label><input type="checkbox" id="b4"><span>Work through one of the book's calculations yourself (latency, throughput, memory size, etc.)</span></label></li>
+        <li><label><input type="checkbox" id="b5"><span>Prepare two or three questions for discussion</span></label></li>
+        <li><label><input type="checkbox" id="b6"><span>Upload your slides to the <a href="https://drive.google.com/drive/folders/1NxhUYActOe-POABwqiYdxXBaBg5tY44c" target="_blank" rel="noopener">Slides folder</a> ahead of time</span></label></li>
+      </ul>
+      <button class="reset" type="button" data-reset>Clear all checks</button>
+    </div>
+    <div class="card" data-list="paper">
+      <h3><img src="../assets/img/chick-engi.webp" alt="">Paper presentation</h3>
+      <p class="meter" data-meter></p>
+      <ul class="check">
+        <li><label><input type="checkbox" id="p1"><span>The problem the paper tackles and where earlier approaches fall short</span></label></li>
+        <li><label><input type="checkbox" id="p2"><span>The core idea in a single diagram</span></label></li>
+        <li><label><input type="checkbox" id="p3"><span>Experiments: what was compared with what, and how did it turn out?</span></label></li>
+        <li><label><input type="checkbox" id="p4"><span>Where it connects to this week's reading<small>The <a href="topic.html#p-h">ten reference papers</a> list the link for each session</small></span></label></li>
+        <li><label><input type="checkbox" id="p5"><span>Limitations, and how it's used in today's inference engines</span></label></li>
+        <li><label><input type="checkbox" id="p6"><span>Two questions for discussion</span></label></li>
+      </ul>
+      <button class="reset" type="button" data-reset>Clear all checks</button>
+    </div>
+  </div>
+
+  <div class="card prompt">
+    <div class="row"><h3 style="margin:0;font-size:20px;flex:1;min-width:200px">Prep helper prompt</h3>
+      <label class="px" for="pSel" style="font-size:12.5px">Session</label><select id="pSel"></select>
+      <select id="pKind" aria-label="Presentation type"><option value="book">Book presentation</option><option value="paper">Paper presentation</option></select>
+      <button class="btn" type="button" id="copyBtn">Copy</button></div>
+    <p style="margin:8px 0 0;font-size:14px;color:var(--muted)">Paste this into an AI assistant to sketch the outline of your presentation. A summary is only a starting point, so always check it against the original.</p>
+    <pre id="pText"></pre>
+  </div>
+</div></section>
+
+<section id="join" aria-labelledby="join-h"><div class="wrap">
+  <div class="sec-h"><h2 id="join-h">Open presenter seats</h2><span class="tag">OPEN SEATS</span></div>
+  <p class="sub" id="openSub">Seats in the remaining sessions that don't have a presenter yet.</p>
+  <div class="open-grid" id="openGrid"></div>
+  <div class="how">
+    <div class="card">
+      <h3 style="margin:0;font-size:21px">How to sign up</h3>
+      <ol>
+        <li>Pick a yellow seat above: the session and type (book or paper) you'd like to take.</li>
+        <li>In the <a href="https://docs.google.com/spreadsheets/d/1pVf5_bPLA5_UhImUO7EJ_Puh3Q5b485w65WVo1QlFsI/edit?usp=sharing" target="_blank" rel="noopener">study timetable (Google Sheet)</a>, write in that session's <b>발제자</b> (presenter) cell using the format <code>책 : 이름, 논문: 이름</code>. The sheet is in Korean: <b>책</b> = book, <b>논문</b> = paper, <b>이름</b> = your name. Example: <code>책 : Hong Gildong, 논문: Kim Byeong-a</code></li>
+        <li>Done. Refresh this board and the yellow seat turns into your name.</li>
+      </ol>
+      <p style="margin:10px 0 0;font-size:14.5px;color:var(--muted)">Can't edit the sheet? Tell the Study Leader on Discord or at a meeting.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin:0;font-size:21px">Which seat suits me?</h3>
+      <p style="margin:6px 0 0;font-size:15px"><b>Book presentations</b> are great for first-timers. The book is friendly, so following the range gives you a structure almost for free.</p>
+      <p style="margin:8px 0 0;font-size:15px"><b>Paper presentations</b> suit people who have worked with the topic in practice or want to dig deeper. Some are classics, like Transformer (2017) or Roofline (2008), which can make them a bit easier.</p>
+    </div>
+  </div>
+</div></section>
+
+<section aria-labelledby="rule-h"><div class="wrap">
+  <div class="sec-h"><h2 id="rule-h">Our ground rules</h2><span class="tag">Just four</span></div>
+  <div class="rules">
+    <div class="card"><h3>Read ahead</h3><p>Even if you're not presenting, skimming the week's range makes the discussion much richer.</p></div>
+    <div class="card"><h3>Ask what you don't know</h3><p>"What does this mean?" is the best question there is. Chicks are new to everything anyway.</p></div>
+    <div class="card"><h3>Cite your sources</h3><p>Note where figures, tables and numbers in your slides come from. For the book, a page or section number is fine.</p></div>
+    <div class="card"><h3>Can't make it? Say so early</h3><p>If something comes up on your presenting week, let us know in advance and we'll swap seats.</p></div>
+  </div>
+</div></section>
+
+<section aria-labelledby="faq-h"><div class="wrap">
+  <div class="sec-h"><h2 id="faq-h">Frequently asked questions</h2><span class="tag">FAQ</span></div>
+  <div class="faq">
+    <details><summary>Where do I get the book?</summary><p>You can download a free PDF from the publisher's site (<a href="https://www.baseten.co/inference-engineering/" target="_blank" rel="noopener">baseten.co/inference-engineering</a>) or read the <a href="https://www.baseten.co/inference-engineering/book/" target="_blank" rel="noopener">online edition</a>. The print edition is sold separately.</p></details>
+    <details><summary>Do I need a GPU?</summary><p>No. This study focuses on reading and understanding the book. If you want to run things yourself, you can start with small models using the MLX video for Apple silicon Macs (bonus video) or a free cloud notebook.</p></details>
+    <details><summary>Can I join partway through?</summary><p>Yes. Each session covers its own topic, so skim the basic terms from Session 1 (Ch. 0–1) in the <a href="topic.html">Topic Guide</a> and you'll be able to follow along.</p></details>
+    <details><summary>Where do we meet?</summary><p>All meetings are on Zoom. Meeting ID <b>884 5916 2312</b>, passcode <b>11111</b>. The join link and copy buttons are in <a href="index.html#zoom">How to join on the Briefing page</a>.</p></details>
+    <details><summary>How will I know if the time changes?</summary><p>Times are still tentative. When a date changes in the sheet, the D-day, schedule and notice ticker on this board update automatically.</p></details>
+    <details><summary>When are the special sessions (guest lectures)?</summary><p>Besides the 10 regular sessions, there are special sessions · guest lectures with invited speakers. Dates and speakers are announced on Discord.</p></details>
+    <details><summary>Where can I find past slides?</summary><p>They're collected by session in the <a href="https://drive.google.com/drive/folders/1NxhUYActOe-POABwqiYdxXBaBg5tY44c" target="_blank" rel="noopener">Slides folder on Google Drive</a>.</p></details>
+    <details><summary>Can one person do both the book and the paper presentation?</summary><p>For sessions with few volunteers, yes. But we suggest sharing out the open seats first so no one person ends up carrying everything.</p></details>
+  </div>
+</div></section>
+
+<section id="admin" aria-labelledby="admin-h"><div class="wrap">
+  <div class="sec-h"><h2 id="admin-h">How does the board update?</h2><span class="tag">Automatic</span></div>
+  <div class="say-inline"><img src="../assets/img/fly.webp" alt=""><div class="bub"><span class="who" style="color:#C8402F">Fruit Fly Researcher</span>This board reads the Google Sheet every time it opens. Just edit the sheet and presenters, open seats and dates update on their own, and once a meeting is over the egg hatches by itself. No files to edit by hand!</div></div>
+  <div class="admin">
+    <div class="card">
+      <h3>① When you edit the sheet</h3>
+      <ul class="steps">
+        <li><b>발제자</b> (presenter) cell → session cards, next meeting, open seats list</li>
+        <li><b>날짜</b> (date) cell → D-day, order, calendar links, notice ticker</li>
+        <li>If you add <b>시간</b> (time), <b>발표자료</b> (slides) or <b>비고</b> (notes) columns, those are read too. Write <code>휴강</code> (no session) in 비고 to skip that session; <code>skip</code>, <code>cancel</code> and <code>停课</code> also work.</li>
+      </ul>
+      <p style="font-size:13.5px;color:var(--muted)">Current status: <span class="sync" data-sync></span></p>
+    </div>
+    <div class="card">
+      <h3>② What changes on its own</h3>
+      <ul class="steps">
+        <li>Once the meeting time (Sat 20:00, 2 hours) has passed, that session is marked <b>done</b>, its egg hatches and the next meeting moves up.</li>
+        <li>Open seats from past sessions drop off the list.</li>
+        <li>Add a <b>완료</b> (done) column to the sheet and write <code>O</code> to mark a session done early.</li>
+      </ul>
+      <p style="font-size:13.5px;color:var(--muted)">The sheet must be shared as "Anyone with the link: Viewer". If the sheet can't be read, the built-in defaults are shown.</p>
+    </div>
+    <div class="card">
+      <h3>③ Check the presenter cell format</h3>
+      <p>Type what you'd put in the sheet and see how the board reads it.</p>
+      <div class="tester">
+        <label for="tIn" class="px" style="font-size:12.5px">Presenter cell contents</label>
+        <input id="tIn" value="책 : Hong Gildong, 논문: Kim Byeong-a">
+        <output id="tOut" for="tIn"></output>
+      </div>
+    </div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p>Presenters &amp; dates: <a href="https://docs.google.com/spreadsheets/d/1pVf5_bPLA5_UhImUO7EJ_Puh3Q5b485w65WVo1QlFsI/edit?usp=sharing" target="_blank" rel="noopener">Study timetable (Google Sheet)</a> · Our event: <a href="index.html#langcon">LangCon</a> · Textbook: <a href="https://www.baseten.co/inference-engineering/" target="_blank" rel="noopener">Kiely, P. (2026). Inference engineering. Baseten Books.</a></p>
+  <p><span class="sync" data-sync></span></p>
+  <p class="credit" data-credit>Page by Reon Ahn (Ahn, Sang-Sun) · Contact sangsun.ahn@m-robo.com · Website <a href="https://www.ahnboat.xyz" target="_blank" rel="noopener">www.ahnboat.xyz</a></p>
+</div></footer>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/board.js"></script>
+<script>
+(function(){
+  var B=window.Board,S=B.S,esc=B.esc,$=function(id){return document.getElementById(id);};
+  /* strings used on this page */
+  var L10N={
+    meter:function(n,t){return n+' / '+t+' ready'+(n===t?' · All set to present! Peep!':'');},
+    opt:function(n,t){return 'Session '+n+' · '+t;},
+    copied:'Copied',copy:'Copy',selected:'Selected · Ctrl+C',
+    parsed:function(b,p){return '→ Book presentation: '+(b||'(Open)')+' / Paper presentation: '+(p||'(Open)');},
+    openN:function(n){return n+(n===1?' seat':' seats')+' in the remaining sessions still need a presenter.';},
+    openNone:'Every presenter seat in the remaining sessions is filled. Thank you!',
+    seatK:function(n,d,k){return 'Session '+n+' · '+d+' · '+(k==='book'?'Book presentation':'Paper presentation');},
+    promptBook:function(s){
+      return 'I\'m the book presenter for session '+s.no+' of a study group reading "Inference Engineering" (Philip Kiely, 2026).\n'+
+        'Topic: '+B.tx(s,'title')+' ('+B.sub(s)+')\nRange: '+B.tx(s,'range')+'\nSections to read:\n'+s.reads.map(function(r){return '- '+r;}).join('\n')+'\n'+
+        'This week\'s goal: '+B.tx(s,'goal')+'\n\n'+
+        'Help me build an outline for my presentation in this order:\n'+
+        '1. One or two sentences on the key claim of each section (based only on the text I paste)\n'+
+        '2. Five terms a newcomer might find confusing, with simple explanations\n'+
+        '3. One worked example worth calculating by hand (with numbers and units)\n'+
+        '4. Three questions for group discussion\n'+
+        'Don\'t guess or fill in anything that isn\'t in the text; if you don\'t know, say so.\n\n[Paste the book text here]';
+    },
+    promptPaper:function(s){
+      var p=s.paperInfo;
+      return 'I\'m the paper presenter for session '+s.no+' ("'+B.tx(s,'title')+'") of an inference engineering study group.\n'+
+        'Paper: '+p.title+' ('+p.year+')\nLink: '+p.url+'\nThis week\'s book range: '+B.tx(s,'range')+'\n\n'+
+        'Please summarize it in this order:\n'+
+        '1. The problem the paper tackles and the limits of earlier approaches\n'+
+        '2. The core idea (what you would draw if it had to fit in one diagram)\n'+
+        '3. Experimental setup: what was compared with what, and which metrics were used\n'+
+        '4. Where it connects to this week\'s book range\n'+
+        '5. Limitations, follow-up work, and how it\'s used in today\'s inference engines\n'+
+        '6. Two discussion questions\n'+
+        'Base your answers on the text I paste, and when you quote numbers, include the table or section number. Don\'t make up anything that isn\'t in the paper.\n\n[Paste the paper text here]';
+    }
+  };
+  /* checklist */
+  var K='chick-prep-checks',st={};
+  try{st=JSON.parse(localStorage.getItem(K)||'{}')||{};}catch(e){st={};}
+  function save(){try{localStorage.setItem(K,JSON.stringify(st));}catch(e){}}
+  document.querySelectorAll('[data-list]').forEach(function(card){
+    var boxes=card.querySelectorAll('input[type=checkbox]'),meter=card.querySelector('[data-meter]');
+    function paint(){var n=0;boxes.forEach(function(b){if(b.checked)n++;});meter.textContent=L10N.meter(n,boxes.length);}
+    boxes.forEach(function(b){b.checked=!!st[b.id];b.addEventListener('change',function(){st[b.id]=b.checked;save();paint();});});
+    card.querySelector('[data-reset]').addEventListener('click',function(){boxes.forEach(function(b){b.checked=false;st[b.id]=false;});save();paint();});
+    paint();
+  });
+
+  /* prompt */
+  function fillSel(){var v=$('pSel').value;$('pSel').innerHTML=S.sessions.map(function(s){return '<option value="'+s.no+'">'+esc(L10N.opt(s.no,B.tx(s,'title')))+'</option>';}).join('');if(v)$('pSel').value=v;}
+  fillSel();
+  var nx=B.next();if(nx)$('pSel').value=nx.no;
+  function prompt(){
+    var s=S.sessions.filter(function(x){return x.no===+$('pSel').value;})[0];
+    $('pText').textContent=$('pKind').value==='book'?L10N.promptBook(s):L10N.promptPaper(s);
+  }
+  $('pSel').addEventListener('change',prompt);$('pKind').addEventListener('change',prompt);prompt();
+  $('copyBtn').addEventListener('click',function(){
+    var t=$('pText').textContent,btn=$('copyBtn');
+    function sel(){var r=document.createRange();r.selectNodeContents($('pText'));var g=getSelection();g.removeAllRanges();g.addRange(r);btn.textContent=L10N.selected;}
+    try{navigator.clipboard.writeText(t).then(function(){btn.textContent=L10N.copied;setTimeout(function(){btn.textContent=L10N.copy;},1600);},sel);}catch(e){sel();}
+  });
+
+  /* presenter cell format check */
+  function test(){var p=B.parsePresenter($('tIn').value);$('tOut').textContent=L10N.parsed(B.name(p.book),B.name(p.paper));}
+  $('tIn').addEventListener('input',test);test();
+
+  /* open seats */
+  B.onUpdate(function(){
+    var o=B.openSlots();
+    $('openSub').textContent=o.length?L10N.openN(o.length):L10N.openNone;
+    $('openGrid').innerHTML=o.map(function(x){var s=x.s;
+      return '<a class="seat" href="schedule.html#s'+s.no+'"><span class="k">'+esc(L10N.seatK(s.no,B.fmtDate(s),x.kind))+'</span><b>'+esc(x.kind==='book'?B.tx(s,'title'):s.paperInfo.short)+'</b><span>'+esc(x.kind==='book'?B.tx(s,'range'):s.paperInfo.title)+'</span></a>';}).join('');
+  });
+})();
+</script>
+</body>
+</html>

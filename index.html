@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inference Korea 스터디 보드</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Inference Korea: 『Inference Engineering』을 10주 동안 함께 읽는 추론 엔지니어링 스터디. 매주 토요일 저녁 8시 Zoom.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/board.css">
+<style>
+/* 첫 화면: 무대 위 캐릭터 줄 */
+.stage{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:8px;margin-top:22px;position:relative}
+.stage figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+.stage .nm{font-family:var(--display);font-size:14px;background:var(--panel);color:var(--ink);border:2.5px solid var(--line);border-radius:999px;padding:0 10px;white-space:nowrap}
+.stage .lead img{width:clamp(96px,16vw,160px);border-radius:50% 50% 16px 16px;background:var(--cream);border:3px solid var(--line);box-shadow:4px 4px 0 var(--shadow)}
+.flock{display:flex;align-items:end;gap:0}
+.flock img{height:auto;filter:drop-shadow(3px 4px 0 rgba(42,18,87,.25))}
+.flock .core{width:clamp(130px,22vw,230px);margin:0 -10px}
+.flock .s{width:clamp(70px,11vw,120px)}
+.flock .bob{animation:bob 2.4s ease-in-out infinite}
+.flock .bob.d1{animation-delay:-.6s}.flock .bob.d2{animation-delay:-1.2s}.flock .bob.d3{animation-delay:-1.8s}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.arrive{justify-self:end;display:flex;align-items:end;gap:6px;position:relative}
+.arrive img{image-rendering:pixelated}
+.arrive .asst img{width:clamp(70px,11vw,118px)}
+.arrive .fly img{width:clamp(56px,8.5vw,92px)}
+.arrive .tagline{position:absolute;top:-30px;right:0;font-family:var(--px);font-size:12px;background:var(--pink);color:#fff;border:2.5px solid var(--line);border-radius:8px;padding:2px 10px;transform:rotate(3deg);white-space:nowrap}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+
+/* 다음 모임 */
+.nextcard{display:grid;grid-template-columns:220px minmax(0,1fr);overflow:hidden}
+.nextcard .dd{background:var(--band);color:#FFF4CF;padding:22px 20px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.nextcard .dd b{font-family:var(--display);font-weight:400;font-size:clamp(46px,7vw,68px);line-height:1;color:var(--yolk)}
+.nextcard .dd span{font-family:var(--px);font-size:13px}
+.nextcard .body{padding:18px 22px;display:grid;gap:10px;min-width:0}
+.nextcard h3{font-size:26px;margin:0}
+.nextcard .en{color:var(--muted);font-size:14.5px;margin:-6px 0 0}
+.slots{display:flex;gap:10px;flex-wrap:wrap}
+.slot{display:flex;align-items:center;gap:8px;border:2.5px solid var(--line);border-radius:999px;padding:3px 14px 3px 4px;background:var(--bg2)}
+.slot .k{font-family:var(--px);font-size:11.5px;background:var(--band);color:#FFF4CF;border-radius:999px;padding:1px 8px}
+.slot.open{border-style:dashed;border-color:var(--dash);background:transparent;color:var(--muted)}
+.slot.open .k{background:var(--dash)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* 개요 + 알 진행판 */
+.split{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;align-items:start}
+.split .card{padding:20px 22px}
+.eggs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px 8px;margin:6px 0 12px}
+.egg{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--ink)}
+.egg svg{width:44px;height:54px}
+.egg small{font-family:var(--px);font-size:11.5px;color:var(--muted);text-align:center;line-height:1.35}
+.egg.next svg{animation:wob 1.2s ease-in-out infinite}
+@keyframes wob{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+
+/* 안내 카드 */
+.doors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.door{padding:18px 20px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--ink);position:relative}
+.door:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--shadow)}
+.door .num{font-family:var(--px);font-size:12px;color:var(--muted)}
+.door h3{margin:0;font-size:24px}
+.door p{margin:0;color:var(--muted);font-size:15px}
+.door img{position:absolute;right:12px;top:-26px;width:62px}
+.door img.pix{image-rendering:pixelated}
+
+/* 크루 */
+.crew{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.mate{padding:14px 16px;display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:center}
+.mate img{width:64px;height:64px;object-fit:contain}
+.mate img.pix{image-rendering:pixelated}
+.mate h4{margin:0;font-size:18px}
+.mate p{margin:0;font-size:14px;color:var(--muted);line-height:1.55}
+.mate .role{font-family:var(--px);font-size:11px;color:var(--teal-ink)}
+
+/* 참가 방법 */
+.join{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);gap:20px}
+.zoomcard{padding:18px 22px;display:flex;flex-direction:column;gap:10px}
+.zc-head{display:flex;align-items:center;gap:10px}
+.zc-head h3{margin:0;font-size:24px}
+.zc-badge{font-family:var(--px);font-size:12px;background:#2D8CFF;color:#fff;border:2.5px solid var(--line);border-radius:8px;padding:1px 8px}
+.zc-hello{margin:0;font-family:var(--display);font-size:19px;color:var(--teal-ink)}
+.zc-info{display:grid;grid-template-columns:70px minmax(0,1fr);gap:6px 12px;margin:0;align-items:center}
+.zc-info dt{font-family:var(--px);font-size:12.5px;color:var(--muted)}
+.zc-info dd{margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mono{font-family:var(--px);font-size:20px;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.copy{font:inherit;font-family:var(--px);font-size:12px;background:var(--chip);color:var(--chip-ink);border:2px solid var(--line);border-radius:999px;padding:0 10px;cursor:pointer}
+.special{padding:18px 20px;display:flex;flex-direction:column;gap:8px;position:relative}
+.special h3{margin:0;font-size:21px}
+.special p{margin:0;font-size:14.5px;color:var(--muted);padding-right:54px}
+.sp-tag{font-family:var(--px);font-size:11.5px;color:var(--pink-ink)}
+.special img{position:absolute;right:12px;bottom:12px;width:52px;image-rendering:pixelated}
+.special .row{margin-top:auto}
+@media (max-width:980px){.join{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.zoomcard{grid-column:1 / -1}}
+@media (max-width:620px){.join{grid-template-columns:minmax(0,1fr)}}
+
+/* LangCon */
+.lc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);overflow:hidden}
+.lc-band{position:relative;overflow:hidden;background:var(--hero);color:var(--hero-ink);padding:22px 22px 24px;border-right:3px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.lc-band > *:not(.stripes){position:relative}
+.lc-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lc-pill{font-family:var(--display);font-size:clamp(26px,3.6vw,36px);background:var(--band);color:var(--yolk);padding:2px 22px 4px;border-radius:999px;line-height:1.2}
+.lc-state{font-family:var(--px);font-size:12.5px;background:var(--panel);color:var(--ink);border:2.5px solid var(--line);border-radius:999px;padding:1px 10px}
+.lc-theme{margin:0;font-family:var(--display);font-size:clamp(19px,2.3vw,24px);line-height:1.35}
+.lc-facts{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 10px;margin:0;font-size:14.5px;max-width:calc(100% - 90px)}
+.lc-facts dt{font-family:var(--px);font-size:12.5px;padding-top:2px}
+.lc-facts dd{margin:0;font-weight:500}
+.lc-links{display:flex;gap:8px;flex-wrap:wrap}
+.lc-links .btn{font-size:14px;padding:3px 12px}
+.lc-chick{position:absolute!important;right:10px;bottom:8px;width:96px;filter:drop-shadow(3px 4px 0 rgba(42,18,87,.25))}
+.lc-body{padding:18px 20px;min-width:0}
+.lc-body h3{margin:0 0 8px;font-size:21px}
+.lc-talks{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.lc-talks li{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;font-size:14px;line-height:1.45}
+.lc-talks time{font-family:var(--px);font-size:12px;color:var(--muted);padding-top:2px;font-variant-numeric:tabular-nums}
+.lc-talks small{display:block;color:var(--muted);font-size:12.5px}
+.lc-staff{margin:12px 0 0;font-size:13px;color:var(--muted)}
+.lc-say{margin-top:20px;max-width:880px}
+.lc-hist-h{font-size:20px;margin:24px 0 10px}
+.lc-hist{display:flex;gap:10px;flex-wrap:wrap}
+.lc-hist div{border:2.5px solid var(--line);border-radius:14px;padding:6px 14px;background:var(--panel);display:flex;gap:10px;align-items:baseline}
+.lc-hist b{font-family:var(--display);font-weight:400;font-size:19px}
+.lc-hist a{font-family:var(--px);font-size:12.5px}
+@media (max-width:860px){.lc{grid-template-columns:minmax(0,1fr)}.lc-band{border-right:0;border-bottom:3px solid var(--line)}}
+
+@media (max-width:860px){
+  .doors{grid-template-columns:minmax(0,1fr)}
+  .split{grid-template-columns:minmax(0,1fr)}
+  .nextcard{grid-template-columns:minmax(0,1fr)}
+  .nextcard .dd{flex-direction:row;align-items:baseline;gap:14px;flex-wrap:wrap}
+}
+@media (max-width:620px){
+  .stage{grid-template-columns:minmax(0,1fr) minmax(0,1fr);row-gap:16px}
+  .stage .flock{grid-column:1 / -1;order:-1;justify-content:center}
+  .arrive .tagline{top:-26px}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="ticker" role="status"><span class="lamp" aria-hidden="true"></span><div class="run"><span id="tickerText">Inference Korea · 매주 토요일 저녁 8시 · Zoom</span></div></div>
+  <div class="navbar"><div class="wrap">
+    <a class="brand" href="index.html"><img src="assets/img/chick-core.webp" alt=""><span>Inference Korea <small>병아리 추론 연구소</small></span></a>
+    <nav class="nav" aria-label="스터디 보드">
+      <a href="index.html"><span class="n">01</span>브리핑</a>
+      <a href="schedule.html"><span class="n">02</span>일정표</a>
+      <a href="topic.html"><span class="n">03</span>주제 안내</a>
+      <a href="guide.html"><span class="n">04</span>스터디 안내</a>
+    </nav>
+  </div></div>
+</div>
+
+<header class="hero">
+  <div class="stripes" aria-hidden="true"></div>
+  <div class="wrap">
+    <span class="kicker">INFERENCE KOREA · FROM TEXT TO ACTION · 2026 가을 · 10주</span>
+    <h1>병아리들의 <span class="pill">추론 엔진</span> 수련기</h1>
+    <p class="lede">글자를 받아먹고 다음 글자를 내놓는 병아리, 그런데 왜 어떤 날은 빠르고 어떤 날은 느릴까요? 『Inference Engineering』을 10주 동안 함께 읽으며 GPU, 추론 엔진, 양자화, 배포와 운영까지 따라갑니다. 바쁜 박사님 대신 연구소에서 조수와 초파리 연구원이 도우러 왔습니다.</p>
+    <div class="stage">
+      <figure class="lead"><img src="assets/img/leader.webp" alt="스터디장: 긴 머리에 안경을 쓰고 파란 셔츠를 입은 채 콧노래를 부르는 모습"><figcaption class="nm">스터디장</figcaption></figure>
+      <div class="flock" aria-label="병아리 넷">
+        <img class="s bob d1" src="assets/img/chick-pre.webp" alt="병아리 프리">
+        <img class="core bob" src="assets/img/chick-core.webp" alt="가슴에 회로 하트가 있는 큰 병아리 삐약코어">
+        <img class="s bob d2" src="assets/img/chick-deco.webp" alt="병아리 디코">
+        <img class="s bob d3" src="assets/img/chick-engi.webp" alt="렌치를 든 병아리 엔지">
+      </div>
+      <div class="arrive">
+        <span class="tagline">박사 연구소 파견</span>
+        <figure class="asst"><img src="assets/img/assistant.webp" alt="조수: 분홍 머리를 양쪽으로 묶은 픽셀 캐릭터"><figcaption class="nm">조수</figcaption></figure>
+        <figure class="fly"><img src="assets/img/fly.webp" alt="초파리 연구원: 헬멧과 가운을 입은 픽셀 초파리"><figcaption class="nm">초파리</figcaption></figure>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a class="btn" href="schedule.html">10주 일정표 보기 →</a>
+      <a class="btn ghost" href="topic.html">추론 엔지니어링이 뭐예요?</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section aria-labelledby="next-h"><div class="wrap">
+  <div class="sec-h"><h2 id="next-h">다음 모임</h2><span class="tag">NEXT MEETING</span></div>
+  <p class="sub">날짜는 한국 시간 기준으로 자동 계산됩니다.</p>
+  <div id="nextBox"><div class="card" style="padding:18px 22px">일정을 불러오는 중입니다. 화면이 바뀌지 않으면 <a href="schedule.html">일정표</a>에서 확인하세요.</div></div>
+</div></section>
+
+<section id="zoom" aria-labelledby="zoom-h"><div class="wrap">
+  <div class="sec-h"><h2 id="zoom-h">참가 방법</h2><span class="tag">ZOOM · 매주 토 20:00 KST</span></div>
+  <div class="join">
+    <article class="card zoomcard">
+      <div class="zc-head"><span class="zc-badge">ZOOM</span><h3>Zoom 회의 참가</h3></div>
+      <p class="zc-hello">토요일 저녁 8시에 뵙겠습니다.</p>
+      <dl class="zc-info">
+        <dt>회의 ID</dt><dd><b class="mono">884 5916 2312</b> <button class="copy" type="button" data-copy="884 5916 2312">복사</button></dd>
+        <dt>암호</dt><dd><b class="mono">11111</b> <button class="copy" type="button" data-copy="11111">복사</button></dd>
+      </dl>
+      <div class="row"><a class="btn" href="https://us02web.zoom.us/j/88459162312?pwd=jSA93w9V4X3HRXhyauV6fANPBrJrxP.1" target="_blank" rel="noopener">Zoom 회의 참가 →</a><button class="btn ghost" type="button" data-copy="https://us02web.zoom.us/j/88459162312?pwd=jSA93w9V4X3HRXhyauV6fANPBrJrxP.1">링크 복사</button></div>
+    </article>
+    <article class="card special">
+      <span class="sp-tag">SPECIAL SESSION</span>
+      <h3>특별 세션 · 연사 특강</h3>
+      <p>정규 10회차 외에 초청 연사의 특강이 열립니다. 날짜, 연사, 주제는 <b>Discord</b>에서 먼저 안내합니다.</p>
+      <div class="row" id="discordRow"></div>
+      <img class="pix" src="assets/img/fly.webp" alt="">
+    </article>
+    <article class="card special slides">
+      <span class="sp-tag">SLIDES</span>
+      <h3>발표 자료 모음</h3>
+      <p>회차별 책·논문 발제 자료는 구글 드라이브 폴더에 모읍니다. 지난 회차 복습이나 결석한 날 따라잡기에 쓰세요.</p>
+      <div class="row"><a class="btn teal" href="https://drive.google.com/drive/folders/1NxhUYActOe-POABwqiYdxXBaBg5tY44c" target="_blank" rel="noopener">발표자료 폴더 열기 ↗</a></div>
+      <img class="pix" src="assets/img/assistant.webp" alt="">
+    </article>
+  </div>
+</div></section>
+
+<section aria-labelledby="log-h"><div class="wrap">
+  <div class="sec-h"><h2 id="log-h">연구소 도착 기록</h2><span class="tag">LOG · 첫 모임 일주일 전</span></div>
+  <p class="sub">박사님은 학회 출장 중. 대신 편지 한 통과 함께 두 명이 도착했습니다.</p>
+  <div class="log">
+    <div class="sys">[SYSTEM] 박사 연구소에서 파견 통지가 도착했습니다. 파견 인원: 조수 1, 초파리 연구원 1. 첨부: 편지 한 통, 10주치 지도, 용어 카드 한 묶음.
+      <div class="letter"><span class="seal">박사 연구소</span>"존경하는 스터디장님! 급한 학회 일정으로 직접 찾아뵙지 못해 송구합니다. 병아리들이 추론 엔진을 배운다는 소식을 듣고, 부족하나마 저희 연구소의 조수와 초파리 연구원을 보내 드립니다. 일정 정리든 발제 준비든 마음껏 부려 주십시오. 10주 뒤 병아리 열 마리가 모두 부화하는 날, 꼭 결과를 여쭙겠습니다. 늘 감사드립니다." <span style="display:block;text-align:right;margin-top:4px">— 박사 올림</span></div>
+    </div>
+    <div class="say lead"><div class="ava"><img src="assets/img/leader.webp" alt=""></div><div class="bub"><span class="who">스터디장</span>어서 와요! 이번 가을엔 『Inference Engineering』을 10주 동안 같이 읽어요. 매주 토요일 저녁 8시, 책 한 꼭지와 논문 한 편씩이에요. 발제는 회차마다 책 담당 한 명, 논문 담당 한 명.</div></div>
+    <div class="say chick"><div class="ava"><img src="assets/img/chick-core.webp" alt=""></div><div class="bub"><span class="who">삐약코어</span>삐약! 저는 글자를 받아먹고 다음 글자를 하나씩 내놓아요. 그런데 손님이 몰리면 대답이 느려져요. 배가 고파서일까요, 머리가 작아서일까요?</div></div>
+    <div class="say asst pixel"><div class="ava pix"><img src="assets/img/assistant.webp" alt=""></div><div class="bub"><span class="who">조수</span>삐약코어? 이름에 코어가 들어가네요! 혹시 쿼드코어예요? 코어 네 개면 병아리 네 마리랑 딱 맞는데. 헤헤.</div></div>
+    <div class="say fly pixel"><div class="ava pix"><img src="assets/img/fly.webp" alt=""></div><div class="bub"><span class="who">초파리 연구원</span>쿼드코어면 CPU잖아. 삐약코어, 너 혹시 펜티엄이야? 계산기 두드리는 소리가 "삐약"으로 들리는 거 아니야?</div></div>
+    <div class="say chick"><div class="ava"><img src="assets/img/chick-core.webp" alt=""></div><div class="bub"><span class="who">삐약코어</span>삐약! 저 CPU 아니에요! 저는 코어가 수천 개 달린 GPU 위에서 돌아요. 근데 코어가 아무리 많아도 모이(데이터)가 늦게 오면 다들 입만 벌리고 기다린대요. 그게 메모리 대역폭 이야기래요. 3회차에 나온대요!</div></div>
+    <div class="say asst pixel"><div class="ava pix"><img src="assets/img/assistant.webp" alt=""></div><div class="bub"><span class="who">조수</span>앗, 코어 수보다 통로가 문제라니! 박사님이 챙겨 주신 지도랑 용어 카드에 다 있어요. 이번엔 잠옷 말고 가운 입고 왔으니까 제대로 도울게요.</div></div>
+    <div class="say fly pixel"><div class="ava pix"><img src="assets/img/fly.webp" alt=""></div><div class="bub"><span class="who">초파리 연구원</span>순서는 내가 정리했어. 0장 개념 → 2장 모델 → 3장 GPU → 4장 소프트웨어 → 5장 최적화 기법 → 6장 여러 입출력 → 7장 운영. 마지막 주는 전체 복습이야. 발제자 빈칸은 일정표에 노랗게 표시해 뒀어!</div></div>
+    <div class="say chick"><div class="ava"><img src="assets/img/chick-pre.webp" alt=""></div><div class="bub"><span class="who">프리 · 디코 · 엔지</span>질문을 한입에 꿀꺽 삼키는 건 프리, 한 알씩 짹짹 내놓는 건 디코, 렌치 들고 더 빠르게 고치는 건 엔지 담당! 우리 셋이 무슨 뜻인지는 2회차에 알려 줄게요.</div></div>
+  </div>
+</div></section>
+
+<section aria-labelledby="over-h"><div class="wrap">
+  <div class="sec-h"><h2 id="over-h">스터디 한눈에</h2><span class="tag">OVERVIEW</span></div>
+  <div class="split">
+    <div class="card">
+      <dl class="facts" id="facts">
+        <dt>교재</dt><dd><a href="https://www.baseten.co/inference-engineering/" target="_blank" rel="noopener">Kiely, P. (2026). <i>Inference engineering</i>. Baseten Books.</a><br><span style="color:var(--muted);font-size:14.5px">출판사 누리집에서 무료 PDF를 받거나 <a href="https://www.baseten.co/inference-engineering/book/" target="_blank" rel="noopener">온라인으로 읽을</a> 수 있습니다.</span></dd>
+        <dt>커뮤니티</dt><dd><a href="https://songys.github.io/inference-korea/" target="_blank" rel="noopener">Inference Korea</a> · AI 모델을 효율적이고 안정적으로 돌리는 법, 추론 엔지니어링을 공부하는 스터디 커뮤니티</dd>
+        <dt>시간</dt><dd>매주 토요일 저녁 8시 (한국 시간, 가안)</dd>
+        <dt>기간</dt><dd id="periodDd">2026년 10월 24일 ~ 12월 26일, 10회</dd>
+        <dt>장소</dt><dd><b>Zoom 온라인</b> · <a href="#zoom">접속 정보 보기</a></dd>
+        <dt>진행</dt><dd>회차마다 <b>책 발제</b>(교재 범위 정리)와 <b>논문 발제</b>(관련 논문 한 편)를 돌아가며 맡고 함께 이야기합니다. 개인 프로젝트와 실습 세션도 계획 중입니다.</dd>
+        <dt>특별 세션</dt><dd>정규 회차 밖에 <b>연사 특강</b>이 열립니다. 자세한 일정은 Discord로 안내합니다.</dd>
+        <dt>발표 자료</dt><dd><a href="https://drive.google.com/drive/folders/1NxhUYActOe-POABwqiYdxXBaBg5tY44c" target="_blank" rel="noopener">구글 드라이브 발표자료 폴더</a></dd>
+        <dt>대상</dt><dd>LLM을 써 봤지만, 모델을 실제로 서비스할 때 속도·비용·품질이 어떻게 갈리는지 궁금한 사람</dd>
+      </dl>
+    </div>
+    <div class="card">
+      <h3 style="margin:0;font-size:22px">10개의 알</h3>
+      <p style="margin:2px 0 0;color:var(--muted);font-size:14.5px">모임을 마치고 완료 표시를 하면 알이 하나씩 부화합니다.</p>
+      <div class="eggs" id="eggs"></div>
+      <p style="margin:0;font-family:var(--px);font-size:13px" id="eggTxt"></p>
+    </div>
+  </div>
+</div></section>
+
+<section id="langcon" aria-labelledby="lc-h"><div class="wrap">
+  <div class="sec-h"><h2 id="lc-h">우리 행사, LangCon</h2><span class="tag">#2026LangCon</span></div>
+  <p class="sub">이 스터디가 함께 꾸리는 언어 모델 행사입니다. 병아리 넷의 고향이 바로 LangCon 2026 포스터예요.</p>
+  <article class="card lc">
+    <div class="lc-band">
+      <div class="stripes" aria-hidden="true"></div>
+      <div class="lc-head">
+        <span class="lc-pill" id="lcName">LangCon 2026</span>
+        <span class="lc-state" id="lcState"></span>
+      </div>
+      <p class="lc-theme" id="lcTheme">From Text to Action</p>
+      <dl class="lc-facts">
+        <dt>일시</dt><dd id="lcDate"></dd>
+        <dt>장소</dt><dd id="lcVenue"></dd>
+        <dt>후원</dt><dd id="lcSpon"></dd>
+      </dl>
+      <div class="lc-links" id="lcLinks"></div>
+      <img class="lc-chick" src="assets/img/chick-core.webp" alt="">
+    </div>
+    <div class="lc-body">
+      <h3>발표 프로그램</h3>
+      <ol class="lc-talks" id="lcTalks"></ol>
+      <p class="lc-staff" id="lcStaff"></p>
+    </div>
+  </article>
+  <div class="say chick lc-say"><div class="ava"><img src="assets/img/chick-engi.webp" alt=""></div><div class="bub"><span class="who">엔지</span>LangCon 2026의 주제가 "텍스트에서 행동으로"였어요. 이 스터디 마지막 10회차 논문(AgentDojo)도 에이전트가 행동할 때의 보안 이야기라서, 한 바퀴 돌아 다시 만나는 셈이에요!</div></div>
+  <h3 class="lc-hist-h">지난 LangCon 다시 보기</h3>
+  <div class="lc-hist" id="lcHist"></div>
+</div></section>
+
+<section aria-labelledby="door-h"><div class="wrap">
+  <div class="sec-h"><h2 id="door-h">보드 둘러보기</h2><span class="tag">MAP</span></div>
+  <p class="sub">이 보드는 네 쪽으로 되어 있습니다. 지금 보는 곳이 첫 쪽입니다.</p>
+  <div class="doors" style="margin-top:34px">
+    <a class="card door" href="schedule.html"><img class="pix" src="assets/img/fly.webp" alt=""><span class="num">02 · 초파리 담당</span><h3>일정표</h3><p>10회차를 알 지도로 보여 줍니다. 읽을 범위, 발제자, 참고 논문과 영상, 캘린더 추가까지.</p></a>
+    <a class="card door" href="topic.html"><img src="assets/img/chick-core.webp" alt=""><span class="num">03 · 삐약코어 담당</span><h3>주제 안내</h3><p>추론 엔지니어링이 무엇인지, 책 여덟 장의 지도, 토큰 생성 실험, 꼭 알아 둘 용어.</p></a>
+    <a class="card door" href="guide.html"><img class="pix" src="assets/img/assistant.webp" alt=""><span class="num">04 · 조수 담당</span><h3>스터디 안내</h3><p>모임 진행 순서, 책·논문 발제 준비법, 비어 있는 발제 자리와 신청 방법.</p></a>
+  </div>
+</div></section>
+
+<section aria-labelledby="crew-h"><div class="wrap">
+  <div class="sec-h"><h2 id="crew-h">등장인물</h2><span class="tag">CREW</span></div>
+  <div class="crew">
+    <div class="card mate"><img src="assets/img/leader.webp" alt=""><div><span class="role">스터디 운영</span><h4>스터디장</h4><p>일정과 발제를 챙기는 사람. 콧노래가 나오면 진도가 잘 나가고 있다는 뜻입니다.</p></div></div>
+    <div class="card mate"><img class="pix" src="assets/img/assistant.webp" alt=""><div><span class="role">박사 연구소 파견</span><h4>조수</h4><p>박사님 심부름으로 왔습니다. 발제 준비 체크리스트와 모임 진행을 돕습니다.</p></div></div>
+    <div class="card mate"><img class="pix" src="assets/img/fly.webp" alt=""><div><span class="role">박사 연구소 파견</span><h4>초파리 연구원</h4><p>순서와 일정을 정리하는 꼼꼼이. 빈 발제 자리를 제일 먼저 찾아냅니다.</p></div></div>
+    <div class="card mate"><img src="assets/img/chick-core.webp" alt=""><div><span class="role">추론 엔진</span><h4>삐약코어</h4><p>가슴의 회로 하트가 모델입니다. 글자를 받아먹고 다음 글자를 내놓습니다.</p></div></div>
+    <div class="card mate"><img src="assets/img/chick-pre.webp" alt=""><div><span class="role">Prefill</span><h4>프리</h4><p>입력 문장을 한입에 꿀꺽. 한꺼번에 처리하니 계산이 몰립니다.</p></div></div>
+    <div class="card mate"><img src="assets/img/chick-deco.webp" alt=""><div><span class="role">Decode</span><h4>디코</h4><p>답을 한 알씩 짹짹. 매번 기억(KV 캐시)을 꺼내 보느라 메모리가 바쁩니다.</p></div></div>
+    <div class="card mate"><img src="assets/img/chick-engi.webp" alt=""><div><span class="role">Optimization</span><h4>엔지</h4><p>렌치를 든 병아리. 양자화, 캐시, 병렬화로 엔진을 손봅니다.</p></div></div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p><b style="color:var(--ink)"><a href="https://songys.github.io/inference-korea/" target="_blank" rel="noopener">Inference Korea</a></b> · 병아리 추론 연구소 스터디 보드. 발제자와 날짜는 <a href="https://docs.google.com/spreadsheets/d/1pVf5_bPLA5_UhImUO7EJ_Puh3Q5b485w65WVo1QlFsI/edit?usp=sharing" target="_blank" rel="noopener">스터디 시간표(구글 시트)</a>에서 자동으로 읽어 옵니다.</p>
+  <p>병아리 캐릭터는 LangCon 2026 포스터, 조수·초파리 연구원은 「AI는 이미지를 어떻게 구분할까?」 시리즈에서 왔습니다.</p>
+  <p><span class="sync" data-sync></span></p>
+  <p class="credit" data-credit>페이지 제작 Reon Ahn (Ahn, Sang-Sun) · 연락 sangsun.ahn@m-robo.com · 홈페이지 <a href="https://www.ahnboat.xyz" target="_blank" rel="noopener">www.ahnboat.xyz</a></p>
+</div></footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/board.js"></script>
+<script>
+(function(){
+  var B=window.Board,S=B.S,esc=B.esc;
+  /* 이 쪽에서 쓰는 문구 */
+  var L10N={
+    book:'책',paper:'논문',open:'발제자 모집 중',
+    finished:'10회차를 모두 마쳤습니다. 병아리 열 마리가 모두 부화했어요!',
+    nth:function(n){return n+'회차 / 10';},
+    ch:function(n,name){return n+'장 '+name;},
+    range:'읽을 범위',ref:'참고 논문',cal:'구글 캘린더에 추가',zoom:'Zoom으로 참가',more:'이 회차 자세히',
+    egg:function(n){return n+'회';},
+    eggTxt:function(d,b,p){return '부화 '+d+' / 10 · 발제자 확정 책 '+b+'/10 · 논문 '+p+'/10';},
+    period:function(a,z,n){return a+' ~ '+z+', '+n+'회';},
+    lcPast:'지난 행사',lcToday:'오늘 열려요!',
+    lcLinks:{home:'LangCon 2026 홈',program:'발표 및 스탭 안내',history:'지난 LangCon',faq:'FAQ'},
+    staff:'스탭: ',site:'행사 페이지',video:'발표 영상',
+    discord:'Discord 열기 ↗',discordWait:'Discord 안내 채널에서 확인하세요'
+  };
+  function eggSVG(st){
+    var shell=st==='done'?'var(--cream)':'var(--panel)';
+    if(st==='skip') return '<svg viewBox="0 0 44 54" aria-hidden="true"><ellipse cx="22" cy="29" rx="18" ry="23" fill="none" stroke="var(--dash)" stroke-width="2.5" stroke-dasharray="5 4"/></svg>';
+    var chick=st==='done'?'<circle cx="22" cy="20" r="9" fill="#F2BD16" stroke="var(--line)" stroke-width="2.5"/><circle cx="25" cy="18" r="1.6" fill="var(--line)"/><path d="M29 20 l5 1 -5 2z" fill="#F2A97A" stroke="var(--line)" stroke-width="1.2"/>':'';
+    var body=st==='done'?'<path d="M4 30 Q4 50 22 51 Q40 50 40 30 L32 25 L27 31 L22 24 L17 31 L12 25 Z" fill="'+shell+'" stroke="var(--line)" stroke-width="2.5"/>':
+      '<ellipse cx="22" cy="29" rx="18" ry="23" fill="'+(st==='next'||st==='live'?'#F2BD16':shell)+'" stroke="var(--line)" stroke-width="2.5"/>';
+    return '<svg viewBox="0 0 44 54" aria-hidden="true">'+chick+body+'</svg>';
+  }
+  function slot(kind,name){
+    var k=kind==='book'?L10N.book:L10N.paper;
+    return name?'<span class="slot"><span class="k">'+k+'</span>'+esc(B.name(name))+'</span>':'<span class="slot open"><span class="k">'+k+'</span>'+L10N.open+'</span>';
+  }
+  B.onUpdate(function(){
+    var s=B.next(),box=document.getElementById('nextBox');
+    if(!s){box.innerHTML='<div class="card" style="padding:18px 22px">'+L10N.finished+'</div>';}
+    else{
+      var ch=s.chapters.map(function(n){return '<span class="chip">'+L10N.ch(n,esc(B.chapter(n).en))+'</span>';}).join(' ');
+      box.innerHTML='<article class="card nextcard"><div class="dd"><span>'+L10N.nth(s.no)+'</span><b>'+B.ddayText(s)+'</b><span>'+esc(B.fmtDate(s,true))+'</span></div>'+
+        '<div class="body"><div class="row">'+ch+(s.note?'<span class="chip" style="background:var(--pink);color:#fff">'+esc(s.note)+'</span>':'')+'</div>'+
+        '<h3>'+esc(B.tx(s,'title'))+'</h3><p class="en">'+esc(B.sub(s))+'</p>'+
+        '<div><b class="px" style="font-size:13px">'+L10N.range+'</b> '+esc(B.tx(s,'range'))+'</div>'+
+        '<div class="slots">'+slot('book',s.book)+slot('paper',s.paper)+'</div>'+
+        '<div><b class="px" style="font-size:13px">'+L10N.ref+'</b> <a href="'+esc(s.paperInfo.url)+'" target="_blank" rel="noopener">'+esc(s.paperInfo.short)+' ('+s.paperInfo.year+')</a></div>'+
+        '<div class="row"><a class="btn" href="'+esc(S.zoom.url)+'" target="_blank" rel="noopener">'+L10N.zoom+'</a><a class="btn ghost" href="'+esc(B.calUrl(s))+'" target="_blank" rel="noopener">'+L10N.cal+'</a><a class="btn ghost" href="schedule.html#s'+s.no+'">'+L10N.more+'</a></div></div></article>';
+    }
+    var eg=document.getElementById('eggs'),done=B.doneCount();
+    eg.innerHTML=S.sessions.map(function(x){var st=B.status(x);
+      return '<a class="egg '+st+'" href="schedule.html#s'+x.no+'" title="'+esc(B.tx(x,'title'))+'">'+eggSVG(st)+'<small>'+L10N.egg(x.no)+'<br>'+esc(B.fmtDate(x).split(' (')[0].split('（')[0])+'</small></a>';}).join('');
+    var f=B.filled();
+    document.getElementById('eggTxt').textContent=L10N.eggTxt(done,f.book,f.paper);
+    var a=S.sessions[0],z=S.sessions[S.sessions.length-1];
+    document.getElementById('periodDd').textContent=L10N.period(B.fmtYMD(a.date,true),B.fmtYMD(z.date,true),S.sessions.length);
+  });
+  /* Discord */
+  document.getElementById('discordRow').innerHTML=S.discord?'<a class="btn" href="'+esc(S.discord)+'" target="_blank" rel="noopener">'+L10N.discord+'</a>':'<span class="chip">'+L10N.discordWait+'</span>';
+  /* LangCon */
+  (function(){
+    var L=S.langcon;if(!L)return;
+    var $=function(id){return document.getElementById(id);};
+    $('lcName').textContent=L.name;$('lcTheme').textContent=B.tx(L,'theme');$('lcDate').textContent=B.fmtYMD(L.date,true)+' '+L.time;$('lcVenue').textContent=B.tx(L,'venue');$('lcSpon').textContent=L.sponsors;
+    var d=Math.round((new Date(L.date+'T00:00:00+09:00')-new Date(B.now().toISOString().slice(0,10)+'T00:00:00+09:00'))/86400e3);
+    $('lcState').textContent=d>0?'D-'+d:d===0?L10N.lcToday:L10N.lcPast;
+    $('lcLinks').innerHTML=L.links.map(function(l,i){return '<a class="btn'+(i?' ghost':'')+'" href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(L10N.lcLinks[l.key]||l.key)+'</a>';}).join('');
+    $('lcTalks').innerHTML=L.talks.map(function(t){return '<li><time>'+esc(t[0])+'</time><span>'+esc(t[1])+'<small>'+esc(B.name(t[2]))+' · '+esc(t[3])+'</small></span></li>';}).join('');
+    $('lcStaff').textContent=L10N.staff+L.staff;
+    $('lcHist').innerHTML=L.history.map(function(h){return '<div><b>'+h.year+'</b><a href="'+esc(h.site)+'" target="_blank" rel="noopener">'+L10N.site+'</a><a href="'+esc(h.video)+'" target="_blank" rel="noopener">'+L10N.video+'</a></div>';}).join('');
+  })();
+})();
+</script>
+</body>
+</html>

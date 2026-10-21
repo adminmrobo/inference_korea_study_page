@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" data-base="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inference Engineering Topic Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="What inference engineering is, a map of the book's eight chapters, a token-generation lab, key terms and ten reference papers.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/board.css">
+<style>
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:20px;align-items:end}
+.hero-grid img{width:100%;max-width:220px;justify-self:center;filter:drop-shadow(4px 5px 0 rgba(42,18,87,.25))}
+
+/* Training vs inference */
+.vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:stretch}
+.vs .card{padding:18px 20px}
+.vs .card h3{margin:0 0 4px;font-size:23px}
+.vs .card .px{font-size:12px;color:var(--muted)}
+.vs .card ul{margin:8px 0 0;padding-left:20px}
+.vs .mid{display:grid;place-items:center;font-family:var(--display);font-size:28px;color:var(--pink-ink)}
+.vs .infer{background:var(--yolk);color:var(--yolk-ink)}
+.vs .infer .px{color:var(--yolk-ink)}
+.tri{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+.tri div{border:3px dashed var(--line);border-radius:14px;padding:12px 16px}
+.tri b{font-family:var(--display);font-weight:400;font-size:20px;display:block}
+.tri span{font-size:14.5px;color:var(--muted)}
+
+/* Lab */
+.lab{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:0;overflow:hidden}
+.lab .ctl{padding:18px 20px;border-right:3px solid var(--line);background:var(--bg2);display:grid;gap:14px;align-content:start}
+.lab label{display:grid;gap:2px;font-size:14.5px}
+.lab label .v{font-family:var(--px);font-size:13px;color:var(--teal-ink)}
+.lab label small{color:var(--muted);font-size:12.5px;line-height:1.45}
+.lab input[type=range]{width:100%;accent-color:var(--pink)}
+.lab .out{padding:18px 20px;display:grid;gap:14px;min-width:0}
+.pipe{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 12px;align-items:center}
+.pipe img{width:46px}
+.bar{height:16px;border:2.5px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+.bar i{display:block;height:100%;width:0;background:var(--teal)}
+.bar.dec i{background:var(--pink)}
+.pipe .lb{grid-column:2;font-family:var(--px);font-size:12px;color:var(--muted);margin-top:-6px}
+.speech{min-height:84px;border:3px solid var(--line);border-radius:16px 16px 16px 4px;padding:10px 14px;background:var(--panel);font-size:15px;line-height:1.6}
+.speech .tk{background:var(--chip);color:var(--chip-ink);border-radius:5px;padding:0 2px;margin-right:2px}
+.speech .tk.new{background:var(--yolk);color:var(--yolk-ink)}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.metric{border:2.5px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--panel)}
+.metric b{display:block;font-family:var(--display);font-weight:400;font-size:24px;line-height:1.15;font-variant-numeric:tabular-nums}
+.metric span{font-size:12.5px;color:var(--muted);line-height:1.35;display:block}
+.chartbox{border:2.5px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--panel)}
+.chartbox h4{margin:0;font-size:16px}
+.chartbox p{margin:0;font-size:13px;color:var(--muted)}
+.chartbox svg{width:100%;height:auto;display:block}
+.chartbox text{font-family:var(--px);font-size:11px;fill:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin:0}
+
+/* Book map */
+.chmap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.chc{padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.chc .no{font-family:var(--display);font-size:38px;line-height:1;color:var(--pink-ink)}
+.chc h3{margin:0;font-size:20px}
+.chc h3 small{display:block;font-family:var(--body);font-size:13.5px;color:var(--muted)}
+.chc p{margin:0;font-size:14px}
+.chc ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--muted)}
+.chc .foot{margin-top:auto;display:flex;gap:6px;flex-wrap:wrap;padding-top:6px}
+.chc .foot a{font-family:var(--px);font-size:12px;text-decoration:none;background:var(--chip);color:var(--chip-ink);border-radius:999px;padding:1px 9px}
+
+/* Glossary */
+.gloss-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.gloss-tools input{font:inherit;font-size:16px;color:var(--ink);background:var(--panel);border:3px solid var(--line);border-radius:999px;padding:6px 16px;min-width:0;flex:1;max-width:420px}
+.gloss{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:980px){.gloss{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.gloss{grid-template-columns:minmax(0,1fr)}}
+.term{padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.term h3{margin:0;font-size:19px}
+.term h3 small{font-family:var(--px);font-size:11.5px;color:var(--muted);margin-left:6px}
+.term p{margin:0;font-size:14.5px}
+.term .chick{font-size:13.5px;color:var(--muted);border-top:2px dashed var(--dash);padding-top:6px}
+.term .chick b{font-family:var(--px);font-size:11.5px;color:#B07A00}
+:root[data-theme="dark"] .term .chick b{color:var(--yolk)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .term .chick b{color:var(--yolk)}}
+.term .foot a{font-family:var(--px);font-size:11.5px}
+
+/* Papers */
+.shelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.paper{padding:14px 18px;display:grid;grid-template-columns:54px minmax(0,1fr);gap:12px;align-items:start}
+.paper .yr{font-family:var(--px);font-size:12px;text-align:center;background:var(--band);color:#FFF4CF;border-radius:8px;padding:6px 0;line-height:1.3}
+.paper .yr b{display:block;font-family:var(--display);font-weight:400;font-size:20px;color:var(--yolk)}
+.paper h3{margin:0;font-size:18px}
+.paper .t{margin:0;font-size:13.5px;color:var(--muted);overflow-wrap:anywhere}
+.paper .why{margin:6px 0 0;font-size:14.5px}
+.vids{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.vids li{border:2.5px solid var(--line);border-radius:12px;padding:8px 14px;background:var(--panel)}
+.vids small{font-family:var(--px);color:var(--muted);font-size:11.5px;display:block}
+
+@media (max-width:980px){.chmap{grid-template-columns:repeat(2,minmax(0,1fr))}.lab{grid-template-columns:minmax(0,1fr)}.lab .ctl{border-right:0;border-bottom:3px solid var(--line)}}
+@media (max-width:700px){
+  .hero-grid{grid-template-columns:minmax(0,1fr)}.hero-grid img{max-width:150px}
+  .vs{grid-template-columns:minmax(0,1fr)}.vs .mid{font-size:22px}
+  .tri{grid-template-columns:minmax(0,1fr)}
+  .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chmap,.shelf{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="ticker" role="status"><span class="lamp" aria-hidden="true"></span><div class="run"><span id="tickerText">Inference Korea · Saturdays at 8 PM · Zoom</span></div></div>
+  <div class="navbar"><div class="wrap">
+    <a class="brand" href="index.html"><img src="../assets/img/chick-core.webp" alt=""><span>Inference Korea <small>Chick Inference Lab</small></span></a>
+    <nav class="nav" aria-label="Study board">
+      <a href="index.html"><span class="n">01</span>Briefing</a>
+      <a href="schedule.html"><span class="n">02</span>Schedule</a>
+      <a href="topic.html"><span class="n">03</span>Topic Guide</a>
+      <a href="guide.html"><span class="n">04</span>Study Guide</a>
+    </nav>
+  </div></div>
+</div>
+
+<header class="hero page-hero">
+  <div class="stripes" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="kicker">TOPIC · Guided by PeepCore</span>
+      <h1>What is inference engineering?</h1>
+      <p class="lede">If training is <b>building</b> a model, inference engineering is making that model answer people's requests <b>fast, cheaply and accurately</b>. Choosing GPUs, configuring inference engines, quantization and caching, deployment and autoscaling all belong here.</p>
+    </div>
+    <img src="../assets/img/chick-core.webp" alt="PeepCore, a big chick with a circuit heart on its chest">
+  </div>
+</header>
+
+<main>
+<section aria-labelledby="vs-h"><div class="wrap">
+  <div class="sec-h"><h2 id="vs-h">Training and inference</h2><span class="tag">Ch. 0 · Session 1</span></div>
+  <p class="sub">The same model does very different jobs. Training happens rarely, as one big run. Inference happens for every request, for as long as the service is alive.</p>
+  <div class="vs">
+    <div class="card"><span class="px">TRAINING</span><h3>Training: chick school</h3><ul><li>Builds the weights (the model's knowledge) by looking at data</li><li>A few big jobs that run for weeks</li><li>Focused on how well it learned (quality)</li></ul></div>
+    <div class="mid" aria-hidden="true">→</div>
+    <div class="card infer"><span class="px">INFERENCE</span><h3>Inference: peeping for real</h3><ul><li>Produces an answer for each input with fixed weights</li><li>On every request, for many people at once</li><li>How fast, how cheap, how accurate</li></ul></div>
+  </div>
+  <div class="tri">
+    <div><b>Speed</b><span>When does the first token appear (TTFT), and how fast do the rest follow (tokens per second)?</span></div>
+    <div><b>Cost</b><span>How many customers can one GPU serve (throughput), and are any GPUs sitting idle?</span></div>
+    <div><b>Quality</b><span>Did the reduced precision and shortcuts we took for speed ruin the answers?</span></div>
+  </div>
+  <p class="note" style="margin-top:12px">This is where Chapter 1 of the book starts. You can't maximize all three at once, so first decide the balance that fits your service.</p>
+</div></section>
+
+<section aria-labelledby="lab-h"><div class="wrap">
+  <div class="sec-h"><h2 id="lab-h">PeepCore Lab</h2><span class="tag">PREFILL · DECODE · BATCH</span></div>
+  <p class="sub">Pree swallows the customer's question in one gulp (prefill), and Deco answers one grain at a time (decode). Serving more customers at once is a win for the GPU as a whole, but each customer waits a bit longer. Move the sliders and press "Start peeping".</p>
+  <div class="card lab">
+    <div class="ctl">
+      <label for="inTok">Question length (input tokens) <span class="v" id="inTokV"></span><input id="inTok" type="range" min="100" max="8000" step="100" value="1000"><small>Longer means Pree takes longer to swallow it → the first token comes later</small></label>
+      <label for="outTok">Answer length (output tokens) <span class="v" id="outTokV"></span><input id="outTok" type="range" min="20" max="1000" step="10" value="300"><small>Deco makes one token per step. Longer answers mean longer total time</small></label>
+      <label for="batch">Concurrent customers (batch size) <span class="v" id="batchV"></span><input id="batch" type="range" min="1" max="64" step="1" value="8"><small>Processing together raises GPU throughput, but each step gets a little slower</small></label>
+      <button class="btn" type="button" id="play">▶ Start peeping</button>
+    </div>
+    <div class="out">
+      <div class="pipe">
+        <img src="../assets/img/chick-pre.webp" alt="Pree"><div class="bar" aria-hidden="true"><i id="pBar"></i></div><span class="lb">Prefill: processes the whole question at once (compute-heavy)</span>
+        <img src="../assets/img/chick-deco.webp" alt="Deco"><div class="bar dec" aria-hidden="true"><i id="dBar"></i></div><span class="lb">Decode: generates one token at a time (reads weights and KV cache from memory every step)</span>
+      </div>
+      <div class="speech" id="speech" aria-live="polite"><span style="color:var(--muted)">Press "Start peeping" and PeepCore will begin answering.</span></div>
+      <div class="metrics">
+        <div class="metric"><b id="mTtft">–</b><span>Time to first token (TTFT)</span></div>
+        <div class="metric"><b id="mItl">–</b><span>Inter-token latency</span></div>
+        <div class="metric"><b id="mTot">–</b><span>Total time for one customer</span></div>
+        <div class="metric"><b id="mThr">–</b><span>Total GPU throughput (tokens/s)</span></div>
+      </div>
+      <div class="chartbox">
+        <h4>What if we serve more customers?</h4>
+        <p><span style="color:var(--pink-ink)">●</span> Total throughput (left axis) <span style="color:var(--teal-ink);margin-left:8px">●</span> Total time per customer (right axis) · vertical line is the current batch</p>
+        <svg id="chart" viewBox="0 0 520 210" role="img" aria-label="Chart of throughput and latency by batch size"></svg>
+      </div>
+      <p class="note">This is an illustrative model. The numbers come from a simplified calculation and differ from real GPUs, models and engines. Look at the <b>shape</b>, not the numbers: as the batch grows, throughput rises sharply while each customer's wait grows slowly. The detailed math is covered in Session 2 (2.2), Session 3 (2.4) and Session 9 (batching and autoscaling).</p>
+    </div>
+  </div>
+</div></section>
+
+<section aria-labelledby="map-h"><div class="wrap">
+  <div class="sec-h"><h2 id="map-h">Book map</h2><span class="tag">Ch. 0 – Ch. 7</span></div>
+  <p class="sub">We read the eight chapters over 10 sessions. Click the session under each chapter to jump to the schedule.</p>
+  <div class="chmap" id="chmap"></div>
+</div></section>
+
+<section aria-labelledby="g-h"><div class="wrap">
+  <div class="sec-h"><h2 id="g-h">Term cards</h2><span class="tag">A bundle the Assistant got from the Professor</span></div>
+  <p class="sub">Words that are confusing at first sight. Appendix A of the book (Inference Glossary) has many more.</p>
+  <div class="gloss-tools"><input id="q" type="search" placeholder="Find a term (e.g. cache, TTFT, quantization)" aria-label="Find a term"><span class="px" style="font-size:13px;color:var(--muted)" id="qn"></span></div>
+  <div class="gloss" id="gloss"></div>
+</div></section>
+
+<section aria-labelledby="p-h"><div class="wrap">
+  <div class="sec-h"><h2 id="p-h">Ten reference papers</h2><span class="tag">For paper presentations</span></div>
+  <p class="sub">One per session. They run from old classics (Roofline, Transformer) through the foundations of today's inference engines (PagedAttention, SGLang, Orca) to evaluation and security papers.</p>
+  <div class="shelf" id="shelf"></div>
+  <h3 style="font-size:22px;margin:30px 0 10px">Extra videos</h3>
+  <ul class="vids" id="vids"></ul>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p>Textbook: <a href="https://www.baseten.co/inference-engineering/" target="_blank" rel="noopener">Kiely, P. (2026). Inference engineering. Baseten Books.</a> Chapter and section titles follow the online edition of the textbook. The metaphors and lab numbers are illustrative and were made for this board.</p>
+  <p><span class="sync" data-sync></span></p>
+  <p class="credit" data-credit>Page by Reon Ahn (Ahn, Sang-Sun) · Contact sangsun.ahn@m-robo.com · Website <a href="https://www.ahnboat.xyz" target="_blank" rel="noopener">www.ahnboat.xyz</a></p>
+</div></footer>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/board.js"></script>
+<script>
+(function(){
+  var B=window.Board,S=B.S,esc=B.esc;
+
+  /* ---------- Lab (illustrative model) ---------- */
+  var $=function(id){return document.getElementById(id);};
+  function model(inp,out,b){
+    var prefill=25+inp*b/40;                       // ms, compute ∝ input tokens × customers
+    var step=18+0.4*b+0.00025*b*(inp+out/2);       // ms, weight reads + batch overhead + KV cache reads
+    var total=prefill+out*step;
+    return {ttft:prefill,step:step,total:total,thr:b*out/(total/1000)};
+  }
+  function fmtMs(ms){return ms<1000?Math.round(ms)+'ms':(ms/1000).toFixed(ms<10000?2:1)+'s';}
+  function readUI(){
+    var i=+$('inTok').value,o=+$('outTok').value,b=+$('batch').value;
+    $('inTokV').textContent=i.toLocaleString('en-US')+' tokens';$('outTokV').textContent=o.toLocaleString('en-US')+' tokens';$('batchV').textContent=b+(b===1?' customer':' customers');
+    return {i:i,o:o,b:b};
+  }
+  function showMetrics(){
+    var u=readUI(),m=model(u.i,u.o,u.b);
+    $('mTtft').textContent=fmtMs(m.ttft);$('mItl').textContent=fmtMs(m.step);$('mTot').textContent=fmtMs(m.total);$('mThr').textContent=Math.round(m.thr).toLocaleString('en-US');
+    drawChart(u);
+  }
+  function drawChart(u){
+    var W=520,H=210,L=52,R=52,T=12,Bt=34,xs=[],i;
+    for(i=1;i<=64;i++)xs.push(i);
+    var thr=xs.map(function(b){return model(u.i,u.o,b).thr;}),lat=xs.map(function(b){return model(u.i,u.o,b).total/1000;});
+    function nice(v){var p=Math.pow(10,Math.floor(Math.log10(v))),n=v/p;return (n<=1?1:n<=2?2:n<=5?5:10)*p;}
+    var tMax=nice(Math.max.apply(null,thr)),lMax=nice(Math.max.apply(null,lat));
+    var X=function(b){return L+(b-1)/63*(W-L-R);},Yt=function(v){return T+(1-v/tMax)*(H-T-Bt);},Yl=function(v){return T+(1-v/lMax)*(H-T-Bt);};
+    var g='';
+    for(i=0;i<=4;i++){var y=T+i/4*(H-T-Bt);g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'" stroke="var(--dash)" stroke-width="1" opacity=".6"/>'+
+      '<text x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+Math.round(tMax*(1-i/4)).toLocaleString('en-US')+'</text>'+
+      '<text x="'+(W-R+6)+'" y="'+(y+4)+'">'+(function(v){return Number.isInteger(v)?v:v.toFixed(1);})(lMax*(1-i/4))+'s</text>';}
+    [1,16,32,48,64].forEach(function(b){g+='<text x="'+X(b)+'" y="'+(H-Bt+16)+'" text-anchor="middle">'+b+'</text>';});
+    g+='<text x="'+((L+W-R)/2)+'" y="'+(H-4)+'" text-anchor="middle">Concurrent customers</text>';
+    var pt=xs.map(function(b,k){return X(b)+','+Yt(thr[k]);}).join(' '),pl=xs.map(function(b,k){return X(b)+','+Yl(lat[k]);}).join(' ');
+    g+='<polygon points="'+X(1)+','+(H-Bt)+' '+pt+' '+X(64)+','+(H-Bt)+'" fill="var(--pink)" opacity=".12"/>';
+    g+='<polyline points="'+pt+'" fill="none" stroke="var(--pink)" stroke-width="3"/>';
+    g+='<polyline points="'+pl+'" fill="none" stroke="var(--teal)" stroke-width="3" stroke-dasharray="7 5"/>';
+    var cx=X(u.b);
+    g+='<line x1="'+cx+'" x2="'+cx+'" y1="'+T+'" y2="'+(H-Bt)+'" stroke="var(--line)" stroke-width="2"/>';
+    g+='<circle cx="'+cx+'" cy="'+Yt(thr[u.b-1])+'" r="5.5" fill="var(--pink)" stroke="var(--line)" stroke-width="2"/>';
+    g+='<circle cx="'+cx+'" cy="'+Yl(lat[u.b-1])+'" r="5.5" fill="var(--teal)" stroke="var(--line)" stroke-width="2"/>';
+    $('chart').innerHTML=g;
+  }
+  var WORDS='Inference is using a trained model to produce an answer for every request. We have to balance three things at once: fast, cheap and accurate. A long question delays the first token, and a long answer delays the finish. Serving many customers keeps the GPU busy, but each one waits a little longer. So we use caches, lower the precision, and split up the work. Peep!'.split(' ');
+  var timer=null;
+  function play(){
+    clearTimeout(timer);
+    var u=readUI(),m=model(u.i,u.o,u.b),sp=$('speech'),pb=$('pBar'),db=$('dBar');
+    var show=Math.min(u.o,40),scale=Math.min(1,2200/m.ttft); // compress time for on-screen display
+    pb.style.transition='none';db.style.transition='none';pb.style.width='0';db.style.width='0';
+    sp.innerHTML='<span style="color:var(--muted)">Pree is swallowing a '+u.i.toLocaleString('en-US')+'-token question…</span>';
+    $('play').disabled=true;
+    setTimeout(function(){
+      var pt=Math.max(300,m.ttft*scale);
+      pb.style.transition='width '+pt+'ms linear';pb.style.width='100%';
+      timer=setTimeout(function(){
+        sp.innerHTML='';var k=0,gap=Math.max(45,Math.min(260,m.step*3));
+        (function next(){
+          var old=sp.querySelector('.new');if(old)old.classList.remove('new');
+          if(k<show){
+            var s=document.createElement('span');s.className='tk new';s.textContent=WORDS[k%WORDS.length];sp.appendChild(s);sp.appendChild(document.createTextNode(' '));
+            k++;db.style.transition='width '+gap+'ms linear';db.style.width=(k/show*100)+'%';timer=setTimeout(next,gap);
+          }else{
+            if(u.o>show){var e=document.createElement('span');e.style.color='var(--muted)';e.textContent='… ('+(u.o-show)+' more tokens omitted)';sp.appendChild(e);}
+            $('play').disabled=false;
+          }
+        })();
+      },pt);
+    },30);
+  }
+  ['inTok','outTok','batch'].forEach(function(id){$(id).addEventListener('input',showMetrics);});
+  $('play').addEventListener('click',play);
+  showMetrics();
+
+  /* ---------- Book map ---------- */
+  var CH_DESC={0:'What inference is and why it matters now: the question behind the whole book.',1:'Before optimizing, define "best": the nature of your app, model selection, and measuring latency and throughput.',2:'LLMs generate one token at a time; image models generate by removing noise. Calculating bottlenecks and optimizing attention.',3:'Inference runs on accelerators. GPU architecture and generations, instances, other accelerators, local inference.',4:'Software changes faster than hardware. From CUDA to inference engines, Dynamo, benchmarking and load testing.',5:'Speed comes from stacking techniques: quantization, speculative decoding, caching, parallelism, disaggregation.',6:'Beyond text: vision-language, embeddings, speech recognition and synthesis, image and video generation.',7:'Problems of running at real scale: containers, autoscaling, multi-cloud, testing and deployment, client code.'};
+  $('chmap').innerHTML=S.chapters.map(function(c){
+    var ss=S.sessions.filter(function(s){return s.chapters.indexOf(c.no)>=0;});
+    return '<article class="card chc"><span class="no">'+c.no+'</span><h3>'+esc(c.en)+'<small>'+esc(B.chName(c))+'</small></h3><p>'+esc(CH_DESC[c.no])+'</p>'+
+      (c.sections.length?'<ul>'+c.sections.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':'')+
+      '<div class="foot">'+ss.map(function(s){return '<a href="schedule.html#s'+s.no+'">Session '+s.no+' · '+B.fmtDate(s).split(' (')[0].split('（')[0]+'</a>';}).join('')+'<a href="'+esc(c.url)+'" target="_blank" rel="noopener">Original ↗</a></div></article>';
+  }).join('');
+
+  /* ---------- Glossary ---------- */
+  var G=[
+    ['Inference','Inference','Feeding inputs to a trained model to get outputs. Most of a service\'s cost is spent here.','A chick that graduated from school, peeping for real.',[1]],
+    ['Latency','Latency','The time from sending a request to receiving the response. Viewed as time to first token and total time.','How long the customer waited for an answer.',[1]],
+    ['Throughput','Throughput','How much work gets done in a given time. Measured in tokens per second or requests per second.','The sum of all the peeps PeepCore can make in one second.',[1,9]],
+    ['TTFT','Time to First Token','The time from a request until the first token appears. Mostly set by the prefill phase. It drives the feeling that a chat "responds quickly".','From Pree swallowing the whole question to Deco making the first sound.',[1,2]],
+    ['Token','Token','The unit piece a model reads and writes. A single word can become several tokens.','One grain of feed that PeepCore eats at a time.',[2]],
+    ['Prefill','Prefill','The phase that processes all input tokens at once. It is compute-heavy and tends to be compute-bound.','Pree gulps down the question in one bite.',[2]],
+    ['Decode','Decode','The phase that generates output tokens one by one. Every step must read the weights, so it tends to be bound by memory bandwidth.','Deco peeps one grain at a time.',[2]],
+    ['KV cache','KV Cache','Memory that stores and reuses the Keys and Values of tokens computed earlier. It avoids recomputation but takes a lot of memory.','The notebook where Deco jots down what it just said.',[2,5,7]],
+    ['Attention','Attention','The operation that computes how much each token should refer to each earlier token. Cost grows as the context gets longer.','Choosing which lines of the notebook to look at before peeping.',[2,3]],
+    ['Memory bandwidth','Memory Bandwidth','The speed of moving data from memory to the compute units. It often determines decode speed.','The width of the tube from the feed store to the beak.',[3,4]],
+    ['Roofline / arithmetic intensity','Roofline / Arithmetic Intensity','A diagram that uses how many operations are done per byte moved to judge whether work is compute-bound or memory-bound.','A graph that tells whether the beak is slow or the tube is too narrow.',[3,4]],
+    ['Inference engine','Inference Engine','Software that takes a model and serves requests efficiently. vLLM, SGLang, TensorRT-LLM and others.','The engine that drives PeepCore\'s heart.',[5]],
+    ['Quantization','Quantization','Representing weights and activations with fewer bits (e.g. 16-bit → 8-bit, 4-bit) to save memory and time. Quality loss must be checked alongside.','Grinding the feed grains smaller so more fit through the tube.',[6]],
+    ['Speculative decoding','Speculative Decoding','Guessing several tokens ahead with a fast method, then having the big model check them in one pass and accept as many as are correct.','Engi whispers the next words in advance and PeepCore says "right" and moves on.',[6]],
+    ['Prefix caching','Prefix Caching','When many requests share the same beginning (such as a system prompt), reusing the KV cache for that part.','Pulling the usual greeting straight out of the notebook.',[7]],
+    ['Model parallelism','Model Parallelism','Splitting one model across several GPUs. Includes tensor, pipeline and expert parallelism.','Seating one big chick across several nests.',[7]],
+    ['Disaggregation','Disaggregation','Running prefill and decode on separate groups of GPUs so each can be tuned for its own job.','Giving Pree and Deco their own rooms.',[7]],
+    ['Modality','Modality','The kind of data a model takes in and puts out: text, images, audio, video and so on.','A chick that eats pictures or sounds instead of feed.',[8]],
+    ['Continuous batching','Continuous Batching','Instead of waiting for a whole batch of requests to finish, slotting in a new request as soon as one finishes. Based on the iteration-level scheduling from the Orca paper.','As soon as a chick finishes eating and leaves, the next chick takes its seat.',[9]],
+    ['Autoscaling · cold start','Autoscaling · Cold Start','Adding and removing GPU replicas as request volume changes. The time a new replica takes to load the model is the cold start.','When customers flood in we build more nests, but a new nest takes time to warm up.',[9]],
+    ['Prompt injection','Prompt Injection','An attack that tries to change a model\'s behavior with instructions hidden in documents or web pages an agent reads. Especially dangerous when text leads to actions.','A prank note on the feed bag saying "don\'t listen to your owner".',[10]]
+  ];
+  function drawGloss(){
+    var q=($('q').value||'').trim().toLowerCase(),n=0;
+    $('gloss').innerHTML=G.filter(function(t){return !q||t.slice(0,4).join(' ').toLowerCase().indexOf(q)>=0;}).map(function(t){n++;
+      return '<article class="card term"><h3>'+esc(t[0])+'<small>'+esc(t[1])+'</small></h3><p>'+esc(t[2])+'</p><p class="chick"><b>In chick words</b> '+esc(t[3])+'</p><div class="foot">'+t[4].map(function(no){return '<a href="schedule.html#s'+no+'">Session '+no+'</a>';}).join(' · ')+'</div></article>';}).join('')||'<div class="card" style="padding:16px">No matching term. Try Appendix A of the textbook.</div>';
+    $('qn').textContent=n+' / '+G.length+' terms';
+  }
+  $('q').addEventListener('input',drawGloss);drawGloss();
+
+  /* ---------- Papers and videos ---------- */
+  var WHY={1:'How do you measure "quality" when choosing a model? A benchmark that keeps writing new questions to reduce training-data contamination.',
+    2:'The paper that first proposed the Transformer and attention, the backbone of today\'s LLMs. Why prefill and decode differ starts here.',
+    3:'Rewrote the attention computation to fit the GPU memory hierarchy, keeping results identical while cutting memory traffic. The classic case of "the bottleneck is memory".',
+    4:'A classic model that puts compute performance and memory bandwidth on one chart and shows which roof a program is hitting.',
+    5:'Manages the KV cache in blocks, like operating-system pages, to cut memory waste. The basis of the vLLM inference engine.',
+    6:'An evaluation paper showing that accuracy wobbles even on the same problem with only the numbers changed. It makes you think about how to check quality after quantization or speculative decoding.',
+    7:'A framework for running LLM programs that make many calls quickly. Prefix cache reuse (RadixAttention) is the key idea.',
+    8:'A vision-language model that connects an image encoder to a language model so it follows visual instructions. Shows how image tokens add to inference cost.',
+    9:'Proposed scheduling at the level of each token-generation step instead of each request. The starting point of continuous batching.',
+    10:'An environment that measures how well tool-using LLM agents withstand prompt injection. The security side of running "From Text to Action".'};
+  $('shelf').innerHTML=S.sessions.map(function(s){var p=s.paperInfo;
+    return '<article class="card paper"><div class="yr">#'+s.no+'<b>'+String(p.year).slice(2)+'</b>\''+'</div><div><h3><a href="'+esc(p.url)+'" target="_blank" rel="noopener">'+esc(p.short)+'</a></h3><p class="t">'+esc(p.title)+' ('+p.year+')</p><p class="why">'+esc(WHY[s.no]||'')+'</p><p class="t" style="margin-top:6px">Paper presenter: '+(s.paper?esc(B.name(s.paper)):'<b style="color:var(--pink-ink)">Recruiting</b>')+'</p></div></article>';}).join('');
+  var seen={},vids=[];
+  S.sessions.forEach(function(s){if(!s.video)return;var k=s.video.url;if(!seen[k]){seen[k]={v:s.video,no:[]};vids.push(seen[k]);}seen[k].no.push(s.no);});
+  $('vids').innerHTML=vids.map(function(x){return '<li><small>Session'+(x.no.length>1?'s ':' ')+x.no.join('·')+'</small><a href="'+esc(x.v.url)+'" target="_blank" rel="noopener">'+esc(x.v.title.replace(' (Review)',''))+'</a></li>';}).join('');
+  B.onUpdate(function(){
+    $('shelf').querySelectorAll('.paper').forEach(function(el,i){var s=S.sessions[i],t=el.querySelectorAll('.t')[1];if(t)t.innerHTML='Paper presenter: '+(s.paper?esc(B.name(s.paper)):'<b style="color:var(--pink-ink)">Recruiting</b>');});
+  });
+})();
+</script>
+</body>
+</html>
