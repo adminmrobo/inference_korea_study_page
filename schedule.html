@@ -174,7 +174,7 @@ tr.next td{background:var(--bg2)}
     ch:function(n,name){return n+'장 '+name;},
     stDone:'부화 완료',stLive:'진행 중',stNext:'다음 모임',stSkip:'휴강',
     goal:'이번 주 목표',reads:function(n,r){return '읽을 꼭지 '+n+'개 · '+r;},
-    ref:'참고 논문',video:'추가 영상',slides:'발표 자료',slidesOpen:'자료 열기 ↗',folder:'발표자료 폴더',
+    ref:'참고 논문',also:'함께 볼 논문',video:'추가 영상',slides:'발표 자료',slidesOpen:'자료 열기 ↗',folder:'발표자료 폴더',
     cal:'캘린더 추가',zoom:'Zoom 참가',bookCh:function(n){return '교재 '+n+'장 열기';},
     statDone:'부화한 알(지난 회차)',statTo:function(n){return n+'회차까지';},statEnd:'모든 회차 완료',end:'끝!',
     statSlots:function(b,p){return '발제 자리 확정 (책 '+b+' · 논문 '+p+')';},statOpen:'남은 회차의 빈 발제 자리',
@@ -233,6 +233,7 @@ tr.next td{background:var(--bg2)}
         '</div>'+
         '<div class="side"><div class="who">'+person('book',s.book)+person('paper',s.paper)+'</div>'+
           '<div class="ref"><span class="lab">'+L10N.ref+' · '+s.paperInfo.year+'</span><a href="'+esc(s.paperInfo.url)+'" target="_blank" rel="noopener"><b>'+esc(s.paperInfo.short)+'</b> — '+esc(s.paperInfo.title)+'</a></div>'+
+          (s.extra?'<div class="ref"><span class="lab">'+L10N.also+' · '+s.extra.year+'</span><a href="'+esc(s.extra.url)+'" target="_blank" rel="noopener"><b>'+esc(s.extra.short)+'</b> — '+esc(s.extra.title)+'</a></div>':'')+
           (s.video?'<div class="ref"><span class="lab">'+L10N.video+'</span><a href="'+esc(s.video.url)+'" target="_blank" rel="noopener">'+esc(s.video.title)+'</a></div>':'')+
           '<div class="ref"><span class="lab">'+L10N.slides+'</span><a href="'+esc(slides||S.slidesFolder)+'" target="_blank" rel="noopener">'+(slides?L10N.slidesOpen:L10N.folder+' ↗')+'</a></div>'+
           '<div class="acts">'+(!B.closed(s)?'<a class="btn" href="'+esc(S.zoom.url)+'" target="_blank" rel="noopener">'+L10N.zoom+'</a><a class="btn ghost" href="'+esc(B.calUrl(s))+'" target="_blank" rel="noopener">'+L10N.cal+'</a>':'')+'<a class="btn ghost" href="'+esc(ch.url)+'" target="_blank" rel="noopener">'+L10N.bookCh(ch.no)+'</a></div>'+

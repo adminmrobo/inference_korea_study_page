@@ -333,7 +333,7 @@
     3:'Rewrote the attention computation to fit the GPU memory hierarchy, keeping results identical while cutting memory traffic. The classic case of "the bottleneck is memory".',
     4:'A classic model that puts compute performance and memory bandwidth on one chart and shows which roof a program is hitting.',
     5:'Manages the KV cache in blocks, like operating-system pages, to cut memory waste. The basis of the vLLM inference engine.',
-    6:'An evaluation paper showing that accuracy wobbles even on the same problem with only the numbers changed. It makes you think about how to check quality after quantization or speculative decoding.',
+    6:'A 2026 paper that swaps the speculative-decoding draft model for a block diffusion model, so many tokens are guessed in parallel in one pass. It reports lossless speedups of over 6×. For checking quality, see the companion paper GSM-Symbolic (2024).',
     7:'A framework for running LLM programs that make many calls quickly. Prefix cache reuse (RadixAttention) is the key idea.',
     8:'A vision-language model that connects an image encoder to a language model so it follows visual instructions. Shows how image tokens add to inference cost.',
     9:'Proposed scheduling at the level of each token-generation step instead of each request. The starting point of continuous batching.',

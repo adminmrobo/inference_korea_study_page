@@ -174,7 +174,7 @@ tr.next td{background:var(--bg2)}
     ch:function(n,name){return 'Ch. '+n+' '+name;},
     stDone:'Hatched',stLive:'Live now',stNext:'Next meeting',stSkip:'No session',
     goal:"This week's goal",reads:function(n,r){return n+(n===1?' section to read':' sections to read')+' · '+r;},
-    ref:'Reference paper',video:'Extra video',slides:'Slides',slidesOpen:'Open slides ↗',folder:'Slides folder',
+    ref:'Reference paper',also:'Also read',video:'Extra video',slides:'Slides',slidesOpen:'Open slides ↗',folder:'Slides folder',
     cal:'Add to calendar',zoom:'Join Zoom',bookCh:function(n){return 'Open textbook Ch. '+n;},
     statDone:'Eggs hatched (past sessions)',statTo:function(n){return 'until session '+n;},statEnd:'All sessions complete',end:'Done!',
     statSlots:function(b,p){return 'Presenter slots filled (book '+b+' · paper '+p+')';},statOpen:'Open presenter slots left',
@@ -233,6 +233,7 @@ tr.next td{background:var(--bg2)}
         '</div>'+
         '<div class="side"><div class="who">'+person('book',s.book)+person('paper',s.paper)+'</div>'+
           '<div class="ref"><span class="lab">'+L10N.ref+' · '+s.paperInfo.year+'</span><a href="'+esc(s.paperInfo.url)+'" target="_blank" rel="noopener"><b>'+esc(s.paperInfo.short)+'</b> — '+esc(s.paperInfo.title)+'</a></div>'+
+          (s.extra?'<div class="ref"><span class="lab">'+L10N.also+' · '+s.extra.year+'</span><a href="'+esc(s.extra.url)+'" target="_blank" rel="noopener"><b>'+esc(s.extra.short)+'</b> — '+esc(s.extra.title)+'</a></div>':'')+
           (s.video?'<div class="ref"><span class="lab">'+L10N.video+'</span><a href="'+esc(s.video.url)+'" target="_blank" rel="noopener">'+esc(s.video.title)+'</a></div>':'')+
           '<div class="ref"><span class="lab">'+L10N.slides+'</span><a href="'+esc(slides||S.slidesFolder)+'" target="_blank" rel="noopener">'+(slides?L10N.slidesOpen:L10N.folder+' ↗')+'</a></div>'+
           '<div class="acts">'+(!B.closed(s)?'<a class="btn" href="'+esc(S.zoom.url)+'" target="_blank" rel="noopener">'+L10N.zoom+'</a><a class="btn ghost" href="'+esc(B.calUrl(s))+'" target="_blank" rel="noopener">'+L10N.cal+'</a>':'')+'<a class="btn ghost" href="'+esc(ch.url)+'" target="_blank" rel="noopener">'+L10N.bookCh(ch.no)+'</a></div>'+

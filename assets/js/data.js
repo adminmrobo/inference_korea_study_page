@@ -50,7 +50,9 @@ window.STUDY = {
   /* 발제자 이름의 영문 표기 (영어·중국어 페이지에서 사용). 없으면 시트에 적힌 그대로 보입니다. */
   names: {
     "송영숙": "Youngsook Song", "조현석": "Hyunseok Cho", "권갑진": "Gapjin Kwon",
-    "박조은": "Joeun Park", "안상선": "Sangseon Ahn"
+    "박조은": "Joeun Park", "안상선": "Sangseon Ahn",
+    "김지은": "Jieun Kim", "이창용": "Changyong Lee", "송태의": "Taeui Song",
+    "김수용": "Suyong Kim", "송치성": "Chiseong Song"
   },
 
   /* 우리 행사 LangCon */
@@ -159,7 +161,7 @@ window.STUDY = {
       goal_zh: "区分计算性能与内存带宽分别限制推理速度的情形。",
       paperInfo: { short: "FlashAttention", title: "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness", year: 2022, url: "https://arxiv.org/pdf/2205.14135v2" },
       video: { title: "Apple — Get started with MLX for Apple silicon", url: "https://developer.apple.com/videos/play/wwdc2025/315/" },
-      book: "", paper: "" },
+      book: "안상선", paper: "김지은" },
 
     { no: 4, date: "2026-11-14", chapters: [3],
       title: "GPU 구조와 추론 실행 환경",
@@ -174,7 +176,7 @@ window.STUDY = {
       goal_zh: "区分 GPU 的计算性能、显存容量与内存带宽，并将其与运行环境的选择联系起来。",
       paperInfo: { short: "Roofline", title: "Roofline: An Insightful Visual Performance Model for Floating-Point Programs and Multicore Architectures", year: 2008, url: "https://www2.eecs.berkeley.edu/Pubs/TechRpts/2008/Archive/EECS-2008-134.pdf" },
       video: { title: "Apple — Get started with MLX for Apple silicon (Review)", url: "https://developer.apple.com/videos/play/wwdc2025/315/" },
-      book: "", paper: "" },
+      book: "조현석", paper: "이창용" },
 
     { no: 5, date: "2026-11-21", chapters: [4],
       title: "추론 소프트웨어와 성능 측정",
@@ -189,7 +191,7 @@ window.STUDY = {
       goal_zh: "区分框架、推理引擎与服务器的角色，并整理性能测量所需的条件。",
       paperInfo: { short: "PagedAttention / vLLM", title: "Efficient Memory Management for Large Language Model Serving with PagedAttention", year: 2023, url: "https://arxiv.org/pdf/2309.06180v1" },
       video: { title: "Stanford CS336 2025 — Lecture 10: Inference", url: "https://www.youtube.com/watch?v=fcgPYo3OtV0" },
-      book: "", paper: "권갑진" },
+      book: "송태의", paper: "권갑진" },
 
     { no: 6, date: "2026-11-28", chapters: [5],
       title: "양자화와 추측 디코딩",
@@ -202,9 +204,10 @@ window.STUDY = {
       goal: "양자화(quantization)와 추측 디코딩(speculative decoding)의 원리를 설명하고, 속도·메모리·품질을 함께 비교한다.",
       goal_en: "Explain the principles of quantization and speculative decoding, and compare speed, memory use, and quality.",
       goal_zh: "说明量化与推测解码的原理，并比较速度、内存与质量。",
-      paperInfo: { short: "GSM-Symbolic", title: "GSM-Symbolic: Understanding the Limitations of Mathematical Reasoning in Large Language Models", year: 2024, url: "https://arxiv.org/pdf/2410.05229v2" },
+      paperInfo: { short: "DFlash", title: "DFlash: Block Diffusion for Flash Speculative Decoding", year: 2026, url: "https://arxiv.org/pdf/2602.06036" },
+      extra: { short: "GSM-Symbolic", title: "GSM-Symbolic: Understanding the Limitations of Mathematical Reasoning in Large Language Models", year: 2024, url: "https://arxiv.org/pdf/2410.05229v2" },
       video: { title: "Apple — Explore large language models on Apple silicon with MLX", url: "https://developer.apple.com/videos/play/wwdc2025/298/" },
-      book: "권갑진", paper: "" },
+      book: "권갑진", paper: "이창용" },
 
     { no: 7, date: "2026-12-05", chapters: [5],
       title: "캐시 재사용과 모델 병렬화",
@@ -219,7 +222,7 @@ window.STUDY = {
       goal_zh: "说明缓存复用、模型并行与阶段分离（disaggregation）的目的与差异。",
       paperInfo: { short: "SGLang", title: "SGLang: Efficient Execution of Structured Language Model Programs", year: 2023, url: "https://arxiv.org/pdf/2312.07104v2" },
       video: { title: "Stanford CS336 2025 — Lecture 10: Inference", url: "https://www.youtube.com/watch?v=fcgPYo3OtV0" },
-      book: "박조은", paper: "" },
+      book: "박조은", paper: "김수용" },
 
     { no: 8, date: "2026-12-12", chapters: [6],
       title: "입출력 유형에 따른 모델과 추론 방식",
@@ -234,7 +237,7 @@ window.STUDY = {
       goal_zh: "说明文本、图像、语音等不同输入输出模态在处理流程与性能指标上的差异。",
       paperInfo: { short: "LLaVA", title: "Visual Instruction Tuning", year: 2023, url: "https://arxiv.org/pdf/2304.08485v2" },
       video: null,
-      book: "안상선", paper: "" },
+      book: "안상선", paper: "김지은" },
 
     { no: 9, date: "2026-12-19", chapters: [7],
       title: "서비스 배포와 요청량에 따른 자원 조절",
@@ -249,7 +252,7 @@ window.STUDY = {
       goal_zh: "区分批处理与自动扩缩容的作用，并说明等待时间、吞吐量与资源使用之间的关系。",
       paperInfo: { short: "Orca", title: "Orca: A Distributed Serving System for Transformer-Based Generative Models", year: 2022, url: "https://www.usenix.org/system/files/osdi22-yu.pdf" },
       video: { title: "Stanford CS336 2025 — Lecture 10: Inference", url: "https://www.youtube.com/watch?v=fcgPYo3OtV0" },
-      book: "", paper: "" },
+      book: "송태의", paper: "" },
 
     { no: 10, date: "2026-12-26", chapters: [7],
       title: "추론 서비스의 안정적 운영과 전체 복습",
@@ -264,6 +267,6 @@ window.STUDY = {
       goal_zh: "说明从模型选择到部署与运营的完整流程，并综合考虑质量、性能、成本与稳定性。",
       paperInfo: { short: "AgentDojo", title: "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents", year: 2024, url: "https://arxiv.org/pdf/2406.13352v3" },
       video: null,
-      book: "", paper: "" }
+      book: "송치성", paper: "" }
   ]
 };
