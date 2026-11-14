@@ -205,7 +205,6 @@ window.STUDY = {
       goal_en: "Explain the principles of quantization and speculative decoding, and compare speed, memory use, and quality.",
       goal_zh: "说明量化与推测解码的原理，并比较速度、内存与质量。",
       paperInfo: { short: "DFlash", title: "DFlash: Block Diffusion for Flash Speculative Decoding", year: 2026, url: "https://arxiv.org/pdf/2602.06036" },
-      extra: { short: "GSM-Symbolic", title: "GSM-Symbolic: Understanding the Limitations of Mathematical Reasoning in Large Language Models", year: 2024, url: "https://arxiv.org/pdf/2410.05229v2" },
       video: { title: "Apple — Explore large language models on Apple silicon with MLX", url: "https://developer.apple.com/videos/play/wwdc2025/298/" },
       book: "권갑진", paper: "이창용" },
 
@@ -267,6 +266,6 @@ window.STUDY = {
       goal_zh: "说明从模型选择到部署与运营的完整流程，并综合考虑质量、性能、成本与稳定性。",
       paperInfo: { short: "AgentDojo", title: "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents", year: 2024, url: "https://arxiv.org/pdf/2406.13352v3" },
       video: null,
-      book: "송치성", paper: "" }
+      book: "송치성", paper: "안상선" }
   ]
 };

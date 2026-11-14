@@ -190,6 +190,7 @@
     v = v || "";
     var g = v.match(/Date\((\d{4}),(\d{1,2}),(\d{1,2})/);           // JSONP 원본 값
     var m = g ? [0, g[1], +g[2] + 1, g[3]] : v.match(/(\d{4})\s*[-.\/년]\s*(\d{1,2})\s*[-.\/월]\s*(\d{1,2})/);
+    if (!m) { var u = v.match(/^\s*(\d{1,2})\/(\d{1,2})\/(\d{4})/); if (u) m = [0, u[3], u[1], u[2]]; }   // 10/24/2026
     if (!m) return "";
     var d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
     if (d.getUTCMonth() !== +m[2] - 1 || d.getUTCDate() !== +m[3]) return "";
@@ -205,21 +206,37 @@
   }
   function isDone(v) { return /^(o|y|yes|v|x|1|true|완료|끝|done|✓|✔|○|●)$/i.test((v || "").trim()); }
   B.applyRows = function (rows) {
-    var hi = -1, col = {};
+    /* 구글 시트 응답은 숫자·날짜가 대부분인 열의 글자 칸(예: '회차', '날짜' 머리글)을 빈칸으로 보낼 수 있다.
+       그래서 '발제자' 머리글(글자 열이라 남아 있음)로 머리글 줄을 찾고, 머리글이 사라진 열은 값의 모양으로 찾는다. */
     function find(r, names) { for (var c = 0; c < r.length; c++) { var v = (r[c] || "").replace(/\s/g, ""); if (names.indexOf(v) >= 0) return c; } return -1; }
-    for (var r = 0; r < rows.length; r++) {
-      var cNo = find(rows[r], ["회차"]), cWho = -1;
-      for (var c = 0; c < rows[r].length; c++) if ((rows[r][c] || "").indexOf("발제자") >= 0) { cWho = c; break; }
-      if (cNo >= 0 && cWho >= 0) {
-        hi = r; col.no = cNo; col.who = cWho;
-        col.date = find(rows[r], ["날짜", "일자"]); col.time = find(rows[r], ["시간", "시각"]);
-        col.done = find(rows[r], ["완료"]); col.slides = find(rows[r], ["발표자료", "자료"]); col.note = find(rows[r], ["비고", "공지", "메모"]);
-        break;
-      }
+    function isWho(v) { return /책\s*[:：]|논문\s*[:：]/.test(v || ""); }
+    var hi = -1, col = {};
+    for (var r = 0; r < rows.length && hi < 0; r++)
+      for (var c = 0; c < rows[r].length; c++) if ((rows[r][c] || "").indexOf("발제자") >= 0) { hi = r; col.who = c; break; }
+    if (hi < 0) {   // 머리글이 통째로 없으면 '책 :' 모양의 칸이 있는 열을 발제자 열로
+      for (var r2 = 0; r2 < rows.length && hi < 0; r2++)
+        for (var c2 = 0; c2 < rows[r2].length; c2++) if (isWho(rows[r2][c2])) { hi = r2 - 1; col.who = c2; break; }
     }
-    if (hi < 0) throw new Error("no '회차'/'발제자' header");
+    if (col.who == null) throw new Error("no presenter column");
+    var head = rows[hi] || [], body = rows.slice(hi + 1);
+    function guess(test) {   // 아래 줄들에서 test를 가장 많이 통과하는 맨 왼쪽 열
+      var best = -1, bestN = 0, w = 0;
+      body.forEach(function (row) { w = Math.max(w, row.length); });
+      for (var c = 0; c < w; c++) {
+        var n = 0; body.forEach(function (row) { if (test((row[c] || "").trim())) n++; });
+        if (n > bestN) { best = c; bestN = n; }
+      }
+      return bestN >= 3 ? best : -1;
+    }
+    col.no = find(head, ["회차"]);
+    if (col.no < 0) col.no = guess(function (v) { return /^\d{1,2}(\.0+)?$/.test(v) && +v >= 1 && +v <= 30; });
+    col.date = find(head, ["날짜", "일자"]);
+    if (col.date < 0) col.date = guess(function (v) { return !!normDate(v); });
+    col.time = find(head, ["시간", "시각"]); col.done = find(head, ["완료"]);
+    col.slides = find(head, ["발표자료", "자료"]); col.note = find(head, ["비고", "공지", "메모"]);
+    if (col.no < 0) throw new Error("no session-number column");
     var n = 0;
-    rows.slice(hi + 1).forEach(function (row) {
+    body.forEach(function (row) {
       function get(k) { return col[k] >= 0 ? (row[col[k]] || "").trim() : null; }
       var no = parseInt(get("no"), 10);
       var s = S.sessions.filter(function (x) { return x.no === no; })[0];

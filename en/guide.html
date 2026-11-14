@@ -273,7 +273,7 @@ code,kbd{font-family:var(--px);font-size:.88em;background:var(--chip);color:var(
     opt:function(n,t){return 'Session '+n+' · '+t;},
     copied:'Copied',copy:'Copy',selected:'Selected · Ctrl+C',
     parsed:function(b,p){return '→ Book presentation: '+(b||'(Open)')+' / Paper presentation: '+(p||'(Open)');},
-    openN:function(n){return n+(n===1?' seat':' seats')+' in the remaining sessions still need a presenter.';},
+    openN:function(n){return n===1?'1 seat in the remaining sessions still needs a presenter.':n+' seats in the remaining sessions still need a presenter.';},
     openNone:'Every presenter seat in the remaining sessions is filled. Thank you!',
     seatK:function(n,d,k){return 'Session '+n+' · '+d+' · '+(k==='book'?'Book presentation':'Paper presentation');},
     promptBook:function(s){
