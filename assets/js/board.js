@@ -183,8 +183,9 @@
     raw = (raw || "").trim();
     if (!raw) return { book: "", paper: "" };
     var mb = raw.match(/책\s*[:：]\s*(.*?)\s*(?=[,，\/\n]|논문|$)/), mp = raw.match(/논문\s*[:：]\s*(.*?)\s*(?=[,，\/\n]|책\s*[:：]|$)/);
-    if (!mb && !mp) return { book: raw, paper: "" };
-    return { book: mb ? mb[1].trim() : "", paper: mp ? mp[1].trim() : "" };
+    function clean(v) { return (v || "").replace(/[\s.。,，;；:：]+$/, "").trim(); }   // "안상선." → "안상선"
+    if (!mb && !mp) return { book: clean(raw), paper: "" };
+    return { book: mb ? clean(mb[1]) : "", paper: mp ? clean(mp[1]) : "" };
   };
   function normDate(v) {
     v = v || "";
