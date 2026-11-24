@@ -1,0 +1,110 @@
+{
+ "version": "1.0",
+ "page": "topic",
+ "nodes": [
+  {
+   "id": "lab:concept/inference",
+   "type": "Concept",
+   "label": {
+    "ko": "추론",
+    "en": "inference"
+   },
+   "page": "topic",
+   "anchor": "#vs-h",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "생성 AI 모델을 서비스에서 돌리는 과정."
+   }
+  },
+  {
+   "id": "lab:concept/inference-engineering",
+   "type": "Concept",
+   "label": {
+    "ko": "추론 엔지니어링",
+    "en": "inference engineering"
+   },
+   "page": "topic",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "CUDA부터 쿠버네티스까지, 생성 AI 서비스를 더 빠르고 싸고 안정적으로 만드는 일."
+   }
+  },
+  {
+   "id": "lab:concept/inference-engine",
+   "type": "Concept",
+   "label": {
+    "ko": "추론 엔진",
+    "en": "Inference engine"
+   },
+   "page": "topic",
+   "anchor": "#p-h",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "ai",
+    "ml",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "규칙을 사실과 맞춰 보며 결론을 이어 붙이는 장치."
+   }
+  },
+  {
+   "id": "lab:topic/rule-vs-learning",
+   "type": "Topic",
+   "label": {
+    "ko": "규칙 기반 vs 학습 기반",
+    "en": "Rule-based vs learned systems"
+   },
+   "page": "topic",
+   "anchor": "#kg",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  }
+ ],
+ "edges": [
+  {
+   "s": "lab:concept/inference-engine",
+   "p": "lab:broader",
+   "o": "lab:topic/rule-vs-learning",
+   "anchor": "#p-h",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/inference",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:concept/inference-engineering",
+   "anchor": "#vs-h",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  }
+ ]
+}

@@ -1,0 +1,110 @@
+{
+ "version": "1.0",
+ "page": "guide",
+ "nodes": [
+  {
+   "id": "lab:concept/prompt",
+   "type": "Concept",
+   "label": {
+    "ko": "프롬프트",
+    "en": "prompt"
+   },
+   "page": "guide",
+   "anchor": "#prep-h",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ai",
+    "llm",
+    "genai"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "AI에게 무엇을 만들지 알려 주는 글."
+   }
+  },
+  {
+   "id": "lab:concept/inference",
+   "type": "Concept",
+   "label": {
+    "ko": "추론",
+    "en": "inference"
+   },
+   "page": "guide",
+   "anchor": "#faq-h",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "stats",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "생성 AI 모델을 서비스에서 돌리는 과정."
+   }
+  },
+  {
+   "id": "lab:concept/inference-engineering",
+   "type": "Concept",
+   "label": {
+    "ko": "추론 엔지니어링",
+    "en": "inference engineering"
+   },
+   "page": "guide",
+   "anchor": "#faq-h",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "CUDA부터 쿠버네티스까지, 생성 AI 서비스를 더 빠르고 싸고 안정적으로 만드는 일."
+   }
+  },
+  {
+   "id": "lab:topic/prompting",
+   "type": "Topic",
+   "label": {
+    "ko": "프롬프팅",
+    "en": "Prompting"
+   },
+   "page": "guide",
+   "anchor": "#kg",
+   "level": 4,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  }
+ ],
+ "edges": [
+  {
+   "s": "lab:concept/prompt",
+   "p": "lab:broader",
+   "o": "lab:topic/prompting",
+   "anchor": "#prep-h",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/inference",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:concept/inference-engineering",
+   "anchor": "#faq-h",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  }
+ ]
+}

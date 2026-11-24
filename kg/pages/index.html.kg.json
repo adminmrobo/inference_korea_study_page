@@ -1,0 +1,204 @@
+{
+ "version": "1.0",
+ "page": "index",
+ "nodes": [
+  {
+   "id": "lab:concept/inference-engine",
+   "type": "Concept",
+   "label": {
+    "ko": "추론 엔진",
+    "en": "Inference engine"
+   },
+   "page": "index",
+   "anchor": "#log-h",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ai",
+    "ml",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "규칙을 사실과 맞춰 보며 결론을 이어 붙이는 장치."
+   }
+  },
+  {
+   "id": "lab:concept/inference",
+   "type": "Concept",
+   "label": {
+    "ko": "추론",
+    "en": "inference"
+   },
+   "page": "index",
+   "anchor": "#crew-h",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "생성 AI 모델을 서비스에서 돌리는 과정."
+   }
+  },
+  {
+   "id": "lab:concept/inference-engineering",
+   "type": "Concept",
+   "label": {
+    "ko": "추론 엔지니어링",
+    "en": "inference engineering"
+   },
+   "page": "index",
+   "anchor": "#log-h",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "CUDA부터 쿠버네티스까지, 생성 AI 서비스를 더 빠르고 싸고 안정적으로 만드는 일."
+   }
+  },
+  {
+   "id": "lab:room/r02",
+   "type": "Concept",
+   "label": {
+    "ko": "길 전체에 점수 매기기 — 작용",
+    "en": "Action (path score)"
+   },
+   "page": "index",
+   "anchor": "#lcTheme",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "llm",
+    "math"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24"
+  },
+  {
+   "id": "lab:method/quantization",
+   "type": "Method",
+   "label": {
+    "ko": "양자화",
+    "en": "Quantization"
+   },
+   "page": "index",
+   "anchor": "#crew-h",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "data",
+    "llm",
+    "ai"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "가중치를 2ᵇ개 눈금 중 가장 가까운 값으로"
+   }
+  },
+  {
+   "id": "lab:topic/rule-vs-learning",
+   "type": "Topic",
+   "label": {
+    "ko": "규칙 기반 vs 학습 기반",
+    "en": "Rule-based vs learned systems"
+   },
+   "page": "index",
+   "anchor": "#kg",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/euler-lagrange",
+   "type": "Topic",
+   "label": {
+    "ko": "오일러-라그랑주 방정식",
+    "en": "Euler–Lagrange equation"
+   },
+   "page": "index",
+   "anchor": "#kg",
+   "level": 4,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "math"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/audio-signal",
+   "type": "Topic",
+   "label": {
+    "ko": "소리 신호의 수치화",
+    "en": "Digitizing audio"
+   },
+   "page": "index",
+   "anchor": "#kg",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "data"
+   ],
+   "match": []
+  }
+ ],
+ "edges": [
+  {
+   "s": "lab:concept/inference-engine",
+   "p": "lab:broader",
+   "o": "lab:topic/rule-vs-learning",
+   "anchor": "#log-h",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:room/r02",
+   "p": "lab:broader",
+   "o": "lab:topic/euler-lagrange",
+   "anchor": "#lcTheme",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:method/quantization",
+   "p": "lab:broader",
+   "o": "lab:topic/audio-signal",
+   "anchor": "#crew-h",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/inference",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:concept/inference-engineering",
+   "anchor": "#crew-h",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  }
+ ]
+}
